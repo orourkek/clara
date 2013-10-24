@@ -370,6 +370,7 @@ class FilesystemTest extends PHPUnit_Framework_TestCase {
 			array('get', array(fullpath('doesnt_exist'))),
 			array('lastAccessed', array(fullpath('doesnt_exist'))),
 			array('lastModified', array(fullpath('doesnt_exist'))),
+			array('rename', array(fullpath('doesnt_exist'), fullpath('tazFile'))),
 		);
 	}
 
@@ -381,7 +382,7 @@ class FilesystemTest extends PHPUnit_Framework_TestCase {
 	 * @covers Clara\Storage\Filesystem::filetype
 	 * @covers Clara\Storage\Filesystem::get
 	 * @covers Clara\Storage\Filesystem::lastAccessed
-	 * @covers Clara\Storage\Filesystem::lastModifed
+	 * @covers Clara\Storage\Filesystem::lastModified
 	 */
 	public function testFileNotFoundExceptionInAllRelevantMethods($method, $args) {
 		call_user_func_array(array($this->fs, $method), $args);
@@ -426,5 +427,16 @@ class FilesystemTest extends PHPUnit_Framework_TestCase {
 		$expected = realpath($path);
 		$this->assertEquals($expected, $this->fs->realPath($path));
 	}
+
+	/**
+	 * @covers Clara\Storage\Filesystem::rename
+	 */
+	public function testRename() {
+		$this->assertFileNotExists(fullpath('tazFile'));
+		$this->fs->rename(fullpath('bazFile'), fullpath('tazFile'));
+		$this->assertFileExists(fullpath('tazFile'));
+		$this->assertFileNotExists(fullpath('bazFile'));
+	}
+
 }
  

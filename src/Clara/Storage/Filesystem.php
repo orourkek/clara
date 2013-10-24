@@ -18,28 +18,6 @@ use DateTime;
 use Exception;
 
 /**
- * PROGRESS TOWARDS COMPLETION: (tabbed in = complete)
- *
- *      chmod
- *      chown
- *      copy
- *      delete
- *      file_get_contents (get)
- *      file_put_contents (put)
- *      fileatime (lastAccessed)
- *      filemtime (lastModified)
- *      filesize
- *      filetype
- * glob
- * link/symlink
- *      mkdir
- * realpath
- * rename
- *      rmdir
- *      touch
- *      unlink
- *
- *
  * @package Clara\Storage
  */
 class Filesystem {
@@ -151,7 +129,7 @@ class Filesystem {
 	/**
 	 * @param $file
 	 * @return int
-	 * @throws Exception\FileNotFoundException
+	 * @throws \Clara\Storage\Exception\FileNotFoundException
 	 */
 	public function filesize($file) {
 		if( ! $this->isReadableFile($file)) {
@@ -163,7 +141,7 @@ class Filesystem {
 	/**
 	 * @param $file
 	 * @return string
-	 * @throws Exception\FileNotFoundException
+	 * @throws \Clara\Storage\Exception\FileNotFoundException
 	 */
 	public function filetype($file) {
 		if( ! $this->isReadableFile($file)) {
@@ -223,7 +201,10 @@ class Filesystem {
 	 * @return bool
 	 */
 	public function mkdir($path, $mode=0777, $recursive=true) {
-		return mkdir($path, $mode, $recursive);
+		if( ! mkdir($path, $mode, $recursive)) {
+			throw new IOException(sprintf('Mkdir failed: "%s" (%o)', $path, $mode));
+		}
+		return $this;
 	}
 
 	/**
@@ -247,6 +228,22 @@ class Filesystem {
 	 */
 	public function realPath($path) {
 		return realpath($path);
+	}
+
+	/**
+	 * @param $source
+	 * @param $target
+	 * @return $this
+	 * @throws \Clara\Storage\Exception\IOException
+	 */
+	public function rename($source, $target) {
+		if( ! file_exists($source)) {
+			throw new FileNotFoundException(sprintf('File doesn\'t exist or isn\'t readable: "%s"', $source));
+		}
+		if( ! rename($source, $target)) {
+			throw new IOException(sprintf('Rename failed: "%s" ==> "%s"', $source, $target));
+		}
+		return $this;
 	}
 
 	/**
