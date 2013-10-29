@@ -11,6 +11,24 @@
 use Clara\Routing\Router;
 use Clara\Routing\Route;
 use Clara\Http\Request;
+use \Clara\Events\Observer;
+use \Clara\Events\Event;
+
+
+class RouterObs extends Observer {
+	public $witnessed = array();
+	public function witness(Event $event) {
+		$this->witnessed[] = $event;
+	}
+	public function hasWitnessed($str) {
+		foreach($this->witnessed as $w) {
+			if($str === $w->getName()) {
+				return true;
+			}
+		}
+		return false;
+	}
+}
 
 
 /**
@@ -163,4 +181,29 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame('one', $result->getName());
 	}
 
+	/**
+	 * This method tests the specific hard-coded events that are fired from the router.
+	 *
+	 * See the Router class docblock for more info on the available events.
+	 *
+	 * @depends testLoadingRoutesFromFile
+	 */
+	public function testRouterSpecificObservableEventsAreFiring(Router $router) {
+		$observer = new RouterObs();
+		$router->attach($observer);
+		$router->addRoute(Route::get('/oof/rab', function(){}));
+		$this->assertTrue($observer->hasWitnessed('router.addRoute'));
+
+		$request = new Request();
+
+		// should match
+		$request->setMethod('GET')->setUri('/oof/rab');
+		$router->Route($request);
+		$this->assertTrue($observer->hasWitnessed('router.route.success'));
+
+		// should NOT match
+		$request->setMethod('GET')->setUri('/qwertyuiop');
+		$router->Route($request);
+		$this->assertTrue($observer->hasWitnessed('router.route.failure'));
+	}
 }

@@ -10,6 +10,8 @@
 
 namespace Clara\Routing;
 
+use Clara\Events\Event;
+use Clara\Events\Observable;
 use Clara\Http\Request;
 use Clara\Routing\Exception\RoutingException;
 
@@ -17,9 +19,14 @@ use Clara\Routing\Exception\RoutingException;
 /**
  * Class Router
  *
+ * EVENTS WITHIN:
+ *  router.route.success
+ *  router.route.failure
+ *  router.addRoute
+ *
  * @package Clara\Routing
  */
-class Router {
+class Router extends Observable {
 
 	/**
 	 * @var \Clara\Routing\Route[]
@@ -36,10 +43,12 @@ class Router {
 		} else {
 			foreach($this->routes as $route) {
 				if($route->matches($request)) {
+					$this->fire(new Event('router.route.success', $this, $route));
 					return $route;
 				}
 			}
 		}
+		$this->fire(new Event('router.route.failure', $this));
 		return false;
 	}
 
@@ -53,6 +62,7 @@ class Router {
 			$type = (is_object($route)) ? get_class($route) : gettype($route);
 			throw new RoutingException('Invalid route given to addRoute(). Expected:"Clara\Routing\Route" Actual:"' . $type . '"');
 		}
+		$this->fire(new Event('router.addRoute', $this, $route));
 		$this->routes[] = $route;
 		return $this;
 	}
