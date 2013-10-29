@@ -43,8 +43,6 @@ class FilesystemTest extends PHPUnit_Framework_TestCase {
 			&& false !== file_put_contents('/tmp/clara/ddiirr/foo', 'baz')
 			&& false !== file_put_contents('/tmp/clara/unreadable', '')
 			&& chmod('/tmp/clara/unreadable', 0333)) {
-				//if we don't include this, the PHP warnings about it will be converted to PHPUnit Exceptions
-				date_default_timezone_set('America/Los_Angeles');
 				$this->fs = new Filesystem();
 				return true;
 			}
