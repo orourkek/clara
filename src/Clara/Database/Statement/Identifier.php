@@ -133,6 +133,34 @@ class Identifier {
 	}
 
 	/**
+	 * @param $str
+	 * @return Identifier
+	 */
+	public static function fromString($str) {
+		if( ! is_string($str)) {
+			throw new StatementException(__METHOD__ . ' requires a string argument. Received: ' . gettype($str) . '.');
+		}
+
+		$alias = '';
+		$prefix = '';
+
+		if(1 === preg_match('#^`?([0-9,a-z,A-Z$_]+?)`?\.`?([0-9,a-z,A-Z$_]+?)`? AS `?([0-9,a-z,A-Z$_]+?)`?$#i', $str, $matches)) {
+			$prefix = $matches[1];
+			$name = $matches[2];
+			$alias = $matches[3];
+		} else if(1 === preg_match('#^`?([0-9,a-z,A-Z$_]+?)`?\.`?([0-9,a-z,A-Z$_]+?)`?$#', $str, $matches)) {
+			$prefix = $matches[1];
+			$name = $matches[2];
+		} else if(1 === preg_match('#^`?([0-9,a-z,A-Z$_]+?)`? AS `?([0-9,a-z,A-Z$_]+?)`?$#i', $str, $matches)) {
+			$name = $matches[1];
+			$alias = $matches[2];
+		} else {
+			$name = $str;
+		}
+		return new Identifier($name, $alias, $prefix);
+	}
+
+	/**
 	 * @return string
 	 */
 	public function __toString() {

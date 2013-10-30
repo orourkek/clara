@@ -79,5 +79,36 @@ class IdentifierTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame($expected, Identifier::isValid($name, $isAlias));
 	}
 
+	public function provideStringsForTesting() {
+		return array(
+			array('`foo`.`bar` as `baz`', 'foo', 'bar', 'baz'),
+			array('`foo`.`bar` AS `baz`', 'foo', 'bar', 'baz'),
+			array('foo.bar AS baz', 'foo', 'bar', 'baz'),
+			array('bar AS baz', '', 'bar', 'baz'),
+			array('foo.bar', 'foo', 'bar', ''),
+			array('bar', '', 'bar', ''),
+		);
+	}
+
+	/**
+	 * @covers Clara\Database\Statement\Identifier::fromString
+	 * @dataProvider provideStringsForTesting
+	 */
+	public function testFromString($string, $prefix, $name, $alias) {
+		$id = Identifier::fromString($string);
+		$this->assertAttributeSame($prefix, 'prefix', $id);
+		$this->assertAttributeSame($name, 'name', $id);
+		$this->assertAttributeSame($alias, 'alias', $id);
+	}
+
+	/**
+	 * @covers Clara\Database\Statement\Identifier::fromString
+	 * @dataProvider provideInvalidNames
+	 * @expectedException \Clara\Database\Statement\Exception\StatementException
+	 */
+	public function testFromStringThrowsExceptionOnInvalidInput($val) {
+		Identifier::fromString($val);
+	}
+
 }
  
