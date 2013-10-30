@@ -16,10 +16,43 @@ class IdentifierTest extends PHPUnit_Framework_TestCase {
 	 * @covers Clara\Database\Statement\Identifier::__construct
 	 */
 	public function testBasicCreate() {
-		$id = new Identifier('foo', 'alias', 'prefix');
-		$this->assertAttributeSame('foo', 'name', $id);
-		$this->assertAttributeSame('alias', 'alias', $id);
-		$this->assertAttributeSame('prefix', 'prefix', $id);
+		$name = 'foo';
+		$alias = 'alias';
+		$prefix = 'prefix';
+		$id = new Identifier($name, $alias, $prefix);
+
+		$this->assertAttributeSame($name, 'name', $id);
+		$this->assertAttributeSame($alias, 'alias', $id);
+		$this->assertAttributeSame($prefix, 'prefix', $id);
+
+		return $id;
+	}
+
+	/**
+	 * @covers Clara\Database\Statement\Identifier::getName
+	 * @covers Clara\Database\Statement\Identifier::getAlias
+	 * @covers Clara\Database\Statement\Identifier::getPrefix
+	 * @covers Clara\Database\Statement\Identifier::setName
+	 * @covers Clara\Database\Statement\Identifier::setAlias
+	 * @covers Clara\Database\Statement\Identifier::setPrefix
+	 * @depends testBasicCreate
+	 */
+	public function testGettersAndSetters(Identifier $id) {
+		$name = 'bar';
+		$prefix = 'b';
+		$alias = 'baz';
+
+		$id->setName($name);
+		$id->setAlias($alias);
+		$id->setPrefix($prefix);
+
+		$this->assertAttributeSame($name, 'name', $id);
+		$this->assertAttributeSame($alias, 'alias', $id);
+		$this->assertAttributeSame($prefix, 'prefix', $id);
+
+		$this->assertSame($name, $id->getName());
+		$this->assertSame($alias, $id->getAlias());
+		$this->assertSame($prefix, $id->getPrefix());
 	}
 
 	public function provideInvalidNames() {
