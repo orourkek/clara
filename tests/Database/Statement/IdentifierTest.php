@@ -35,6 +35,7 @@ class IdentifierTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * @covers Clara\Database\Statement\Identifier::__construct
 	 * @dataProvider provideInvalidNames
 	 * @expectedException \Clara\Database\Statement\Exception\StatementException
 	 */
