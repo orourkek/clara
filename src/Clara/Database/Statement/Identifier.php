@@ -154,6 +154,8 @@ class Identifier {
 		} else if(1 === preg_match('#^`?([0-9,a-z,A-Z$_]+?)`? AS `?([0-9,a-z,A-Z$_]+?)`?$#i', $str, $matches)) {
 			$name = $matches[1];
 			$alias = $matches[2];
+		} else if(1 === preg_match('#^`([0-9,a-z,A-Z$_]+?)`$#i', $str, $matches)) {
+			$name = $matches[1];
 		} else {
 			$name = $str;
 		}

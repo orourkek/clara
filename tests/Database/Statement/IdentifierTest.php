@@ -120,6 +120,7 @@ class IdentifierTest extends PHPUnit_Framework_TestCase {
 			array('bar AS baz', '', 'bar', 'baz'),
 			array('foo.bar', 'foo', 'bar', ''),
 			array('bar', '', 'bar', ''),
+			array('`bar`', '', 'bar', ''),
 		);
 	}
 
