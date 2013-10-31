@@ -20,4 +20,18 @@ use \Exception;
  */
 class ClaraException extends Exception {
 
+	/**
+	 * @var Exception
+	 */
+	public $previous;
+
+	/**
+	 * @param Exception $e
+	 * @return $this
+	 */
+	public function setPrevious(Exception $e) {
+		$this->previous = $e;
+		return $this;
+	}
+
 }
