@@ -11,8 +11,28 @@
 namespace Clara\Exception;
 
 use RuntimeException;
+use Exception;
 
 
+/**
+ * Class ClaraRuntimeException
+ *
+ * @package Clara\Exception
+ */
 class ClaraRuntimeException extends RuntimeException {
+
+	/**
+	 * @var Exception
+	 */
+	public $previous;
+
+	/**
+	 * @param Exception $e
+	 * @return $this
+	 */
+	public function setPrevious(Exception $e) {
+		$this->previous = $e;
+		return $this;
+	}
 
 } 
