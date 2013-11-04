@@ -12,7 +12,11 @@ namespace Clara\Database\Statement;
 
 use Clara\Database\Statement\Exception\StatementException;
 
-
+/**
+ * Class Select
+ *
+ * @package Clara\Database\Statement
+ */
 class Select extends Statement {
 
 	/**
