@@ -22,6 +22,7 @@ All "non-getter" methods return back `$this` to allow for method chaining (see e
 
 **BEFORE:**
 
+    <?php
 	$sql = "SELECT		`l`.`uid`					as `loginId`,
 						`l`.`type`					as `type`,
 						`s`.`uid`					as `siteId`,
@@ -43,10 +44,11 @@ All "non-getter" methods return back `$this` to allow for method chaining (see e
 
 **AFTER:**
 
+    <?php
 	$stmt = new Select();
 
 	$stmt->columns(
-		array('l.type', 'type),
+		array('l.type', 'type'),
 		array('s.uid', 'siteId'),
 		array('s.name', 'siteName'),
 		array('s.internationalname', 'intlName'),
