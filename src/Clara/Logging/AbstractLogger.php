@@ -10,8 +10,26 @@
 
 namespace Clara\Logging;
 
+use Clara\Events\Observable;
+use Clara\Events\Event;
 
-abstract class AbstractLogger {
+
+/**
+ * Class AbstractLogger
+ *
+ * EVENTS WITHIN:
+ *  log.emergency
+ *  log.alert
+ *  log.critical
+ *  log.error
+ *  log.warning
+ *  log.notice
+ *  log.info
+ *  log.debug
+ *
+ * @package Clara\Logging
+ */
+abstract class AbstractLogger extends Observable {
 
 	/**
 	 * @param $level
@@ -28,6 +46,7 @@ abstract class AbstractLogger {
 	 */
 	public function emergency($message)
 	{
+		$this->fire(new Event(sprintf('log.%s', LogLevel::EMERGENCY), $this, $message));
 		$this->log(LogLevel::EMERGENCY, $message);
 	}
 
@@ -42,6 +61,7 @@ abstract class AbstractLogger {
 	 */
 	public function alert($message)
 	{
+		$this->fire(new Event(sprintf('log.%s', LogLevel::ALERT), $this, $message));
 		$this->log(LogLevel::ALERT, $message);
 	}
 
@@ -55,6 +75,7 @@ abstract class AbstractLogger {
 	 */
 	public function critical($message)
 	{
+		$this->fire(new Event(sprintf('log.%s', LogLevel::CRITICAL), $this, $message));
 		$this->log(LogLevel::CRITICAL, $message);
 	}
 
@@ -67,6 +88,7 @@ abstract class AbstractLogger {
 	 */
 	public function error($message)
 	{
+		$this->fire(new Event(sprintf('log.%s', LogLevel::ERROR), $this, $message));
 		$this->log(LogLevel::ERROR, $message);
 	}
 
@@ -81,6 +103,7 @@ abstract class AbstractLogger {
 	 */
 	public function warning($message)
 	{
+		$this->fire(new Event(sprintf('log.%s', LogLevel::WARNING), $this, $message));
 		$this->log(LogLevel::WARNING, $message);
 	}
 
@@ -92,6 +115,7 @@ abstract class AbstractLogger {
 	 */
 	public function notice($message)
 	{
+		$this->fire(new Event(sprintf('log.%s', LogLevel::NOTICE), $this, $message));
 		$this->log(LogLevel::NOTICE, $message);
 	}
 
@@ -105,6 +129,7 @@ abstract class AbstractLogger {
 	 */
 	public function info($message)
 	{
+		$this->fire(new Event(sprintf('log.%s', LogLevel::INFO), $this, $message));
 		$this->log(LogLevel::INFO, $message);
 	}
 
@@ -116,6 +141,7 @@ abstract class AbstractLogger {
 	 */
 	public function debug($message)
 	{
+		$this->fire(new Event(sprintf('log.%s', LogLevel::DEBUG), $this, $message));
 		$this->log(LogLevel::DEBUG, $message);
 	}
 

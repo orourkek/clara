@@ -9,6 +9,25 @@
  */
 
 use Clara\Logging\Writer;
+use Clara\Logging\LogLevel;
+use Clara\Events\Observer;
+use Clara\Events\Event;
+
+class LogObserver extends Observer {
+	public $witnessed = array();
+	public function witness(Event $event) {
+		$this->witnessed[] = $event;
+	}
+	public function hasWitnessed($str) {
+		foreach($this->witnessed as $w) {
+			if($str === $w->getName()) {
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
 
 class WriterTest extends PHPUnit_Framework_TestCase {
 
@@ -59,17 +78,42 @@ class WriterTest extends PHPUnit_Framework_TestCase {
 		$w = new Writer('/tmp/clara');
 	}
 
+	public function provideLogLevels() {
+		return array(
+			array(LogLevel::EMERGENCY),
+			array(LogLevel::ALERT),
+			array(LogLevel::CRITICAL),
+			array(LogLevel::DEBUG),
+			array(LogLevel::ERROR),
+			array(LogLevel::INFO),
+			array(LogLevel::NOTICE),
+			array(LogLevel::WARNING),
+		);
+	}
+
 	/**
 	 * @covers \Clara\Logging\Writer::log
+	 * @dataProvider provideLogLevels
 	 */
-	public function testWrite() {
+	public function testWrite($level) {
 		$w = new Writer('/tmp/clara');
-		$file = '/tmp/clara/error.log';
+		$file = sprintf('/tmp/clara/%s.log', $level);
 		$this->assertFileNotExists($file);
-		$w->error('foobarbaztaz!');
+		$w->$level('foobarbaztaz!');
 		$this->assertFileExists($file);
 		$content = file_get_contents($file);
 		$this->assertTrue(false !== strpos($content, 'foobarbaztaz!'));
+	}
+
+	/**
+	 * @dataProvider provideLogLevels
+	 */
+	public function testEventFiring($level) {
+		$w = new Writer('/tmp/clara');
+		$obs = new LogObserver();
+		$w->attach($obs);
+		$w->$level('foobar');
+		$this->assertTrue($obs->hasWitnessed(sprintf('log.%s', $level)));
 	}
 }
  
