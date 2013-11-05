@@ -171,6 +171,14 @@ class Filesystem {
 	}
 
 	/**
+	 * @param $path
+	 * @return bool
+	 */
+	public function isReadableDirectory($path) {
+		return (is_dir($path) && is_readable($path));
+	}
+
+	/**
 	 * @param $file
 	 * @return DateTime
 	 * @throws \Clara\Storage\Exception\FileNotFoundException
