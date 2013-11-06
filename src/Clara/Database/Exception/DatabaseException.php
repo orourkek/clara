@@ -15,4 +15,17 @@ use Clara\Exception\ClaraRuntimeException;
 
 class DatabaseException extends ClaraRuntimeException {
 
+	/**
+	 * @var string
+	 */
+	public $relevantQuery;
+
+	/**
+	 * @param string $relevantQuery
+	 */
+	public function setRelevantQuery($relevantQuery) {
+		$this->relevantQuery = $relevantQuery;
+		return $this;
+	}
+
 } 
