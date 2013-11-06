@@ -1,6 +1,6 @@
 <?php
 /**
- * ClaraLogicException.php
+ * ClaraDomainException.php
  *
  * This DocBlock was generated automatically by PhpStorm
  *
@@ -11,10 +11,10 @@
 namespace Clara\Exception;
 
 use Exception;
-use LogicException;
+use DomainException;
 
 
-class ClaraLogicException extends LogicException {
+class ClaraDomainException extends DomainException {
 
 	/**
 	 * @var Exception
