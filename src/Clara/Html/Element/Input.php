@@ -83,4 +83,14 @@ class Input extends SelfClosingElement {
 		return $this->addAttribute('name', $value);
 	}
 
+	/**
+	 * Shortcut method for a common attribute for this element type
+	 *
+	 * @param $value
+	 * @return $this
+	 */
+	public function value($value) {
+		return $this->addAttribute('value', $value);
+	}
+
 }
