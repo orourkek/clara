@@ -1,6 +1,10 @@
 Clara
 =====
 
+> Is there a word for total screaming genius that sounds modest and a tiny bit sexy?
+
+*- Clara "Oswin" Oswald*
+
 **NOTE: This is a work-in-progress**
 
 What is Clara?
