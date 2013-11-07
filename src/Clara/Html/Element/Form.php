@@ -59,4 +59,14 @@ class Form extends Element {
 		return $this->addAttribute('action', $value);
 	}
 
+	/**
+	 * Shortcut method for a common attribute for this element type
+	 *
+	 * @param $value
+	 * @return $this
+	 */
+	public function name($value) {
+		return $this->addAttribute('name', $value);
+	}
+
 }
