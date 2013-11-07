@@ -66,6 +66,21 @@ abstract class Element {
 	);
 
 	/**
+	 * @param mixed $content
+	 */
+	public function __construct($content=null) {
+		if( ! empty($content)) {
+			if(is_array($content)) {
+				foreach($content as $cont) {
+					$this->addContent($cont);
+				}
+			} else {
+				$this->addContent($content);
+			}
+		}
+	}
+
+	/**
 	 * @param string $attribute
 	 * @param mixed  $value
 	 * @return $this

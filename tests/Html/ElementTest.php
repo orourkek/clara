@@ -74,7 +74,27 @@ class ElementTest extends PHPUnit_Framework_TestCase {
 		$this->assertAttributeEquals($expected, 'attributes', $elem);
 	}
 
-
+	/**
+	 * This test was written in the endless battle to try to get 100% code coverage.
+	 * In reality it's totally unnecessary because these methods are simple aliases
+	 * for addAttribute(), but phpunit can be a bitch sometimes...
+	 *
+	 * @covers \Clara\Html\Element::id
+	 * @covers \Clara\Html\Element::style
+	 * @covers \Clara\Html\Element::clazz
+	 */
+	public function testAliasAttributeMethods() {
+		$elem = new FooElement();
+		$elem->id('foobar');
+		$elem->clazz('baztaz');
+		$elem->style('height:50px;');
+		$expected = array(
+			'id' => new Attribute('id', 'foobar'),
+			'class' => new Attribute('class', 'baztaz'),
+			'style' => new Attribute('style', 'height:50px;'),
+		);
+		$this->assertAttributeEquals($expected, 'attributes', $elem);
+	}
 
 	/**
 	 * @covers \Clara\Html\Element::addAttribute
@@ -103,6 +123,31 @@ class ElementTest extends PHPUnit_Framework_TestCase {
 		$elem = new FooElement();
 		$elem->addContent($content);
 		$this->assertAttributeContains($content, 'content', $elem);
+	}
+
+	/**
+	 * @covers \Clara\Html\Element::__construct
+	 * @dataProvider provideContent
+	 */
+	public function testAddContentThroughConstructor($content) {
+		$elem = new FooElement($content);
+		$this->assertAttributeContains($content, 'content', $elem);
+	}
+
+	/**
+	 * @covers \Clara\Html\Element::__construct
+	 * @dataProvider provideContent
+	 */
+	public function testAddContentArrayThroughConstructor() {
+		$contentArray = array(
+			new FooElement(),
+			'<br/>',
+			'foobarbaztaz',
+		);
+		$elem = new FooElement($contentArray);
+		foreach($contentArray as $content) {
+			$this->assertAttributeContains($content, 'content', $elem);
+		}
 	}
 
 	public function provideInvalidContentTypes() {

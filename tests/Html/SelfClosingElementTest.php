@@ -30,6 +30,14 @@ class SelfClosingElementTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * @covers \Clara\Html\SelfClosingElement::__construct
+	 */
+	public function testThatConstructorDoesntAcceptContent() {
+		$elem = new BazElement('foo');
+		$this->assertAttributeEmpty('content', $elem);
+	}
+
+	/**
 	 * @covers \Clara\Html\SelfClosingElement::open
 	 */
 	public function testOpenMethod() {

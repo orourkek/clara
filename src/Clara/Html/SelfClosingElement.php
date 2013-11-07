@@ -15,6 +15,13 @@ use Clara\Html\Exception\HtmlLogicException;
 
 abstract class SelfClosingElement extends Element {
 
+	public function __construct() {
+		/*
+		 * The constructor for Element accepts content to be added.
+		 * Since SC elements have no content, this method is overridden to do nothing.
+		 */
+	}
+
 	/**
 	 * @param Element|string $content
 	 * @return $this|void
