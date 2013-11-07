@@ -79,7 +79,7 @@ class WhereClause {
 	public function setOperator($operator) {
 		$operator = strtoupper(trim($operator));
 		if( ! in_array($operator, self::$validOperators)) {
-			throw new StatementException(sprintf('Invalid WhereCondition operator: "%s"', $operator));
+			throw new StatementException(sprintf('Invalid WhereClause operator: "%s"', $operator));
 		}
 		$this->operator = $operator;
 		return $this;
@@ -116,7 +116,7 @@ class WhereClause {
 		} else if(is_object($predicate) && $predicate instanceof \Clara\Database\Statement\Statement) {
 			$this->predicate = $predicate->toStringAsSubQuery();
 		} else {
-			throw new StatementException(sprintf('Invalid WhereCondition predicate. Expecting string|int|Statement, received %s', gettype($predicate)));
+			throw new StatementException(sprintf('Invalid WhereClause predicate. Expecting string|int|Statement, received %s', gettype($predicate)));
 		}
 		return $this;
 	}
@@ -134,7 +134,7 @@ class WhereClause {
 	public function setPreceder($preceder) {
 		$preceder = strtoupper($preceder);
 		if( ! in_array($preceder, array('OR', 'AND'))) {
-			throw new StatementException(sprintf('Invalid WhereCondition preceder. Expecting AND|OR'));
+			throw new StatementException(sprintf('Invalid WhereClause preceder. Expecting AND|OR'));
 		}
 		$this->preceder = $preceder;
 		return $this;
@@ -156,7 +156,7 @@ class WhereClause {
 		try {
 			$this->target = Identifier::fromString($target);
 		} catch(StatementException $prev) {
-			$e = new StatementException('WhereCondition target must be a valid identifier');
+			$e = new StatementException('WhereClause target must be a valid identifier');
 			$e->setPrevious($prev);
 			throw $e;
 		}
@@ -195,6 +195,6 @@ class WhereClause {
 				}
 			} catch(\Exception $e) {}
 		}
-		throw new StatementException(sprintf('WhereCondition::fromString failed with input "%s"', $str));
+		throw new StatementException(sprintf('WhereClause::fromString failed with input "%s"', $str));
 	}
 } 

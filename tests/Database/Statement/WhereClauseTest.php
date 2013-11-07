@@ -1,7 +1,7 @@
 <?php
 
 /**
- * WhereConditionTest.php
+ * WhereClauseTest.php
  *
  * This DocBlock was generated automatically by PhpStorm
  *
@@ -13,7 +13,7 @@ use Clara\Database\Statement\WhereClause;
 use Clara\Database\Statement\Identifier;
 use Clara\Database\Statement\Select;
 
-class WhereConditionTest extends PHPUnit_Framework_TestCase {
+class WhereClauseTest extends PHPUnit_Framework_TestCase {
 
 	public function provideTargets() {
 		return array(
@@ -32,13 +32,13 @@ class WhereConditionTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\WhereCondition::__construct
-	 * @covers Clara\Database\Statement\WhereCondition::setTarget
+	 * @covers \Clara\Database\Statement\WhereClause::__construct
+	 * @covers \Clara\Database\Statement\WhereClause::setTarget
 	 * @dataProvider provideTargets
 	 */
 	public function testSetTarget($target, $expectException) {
 		if($expectException) {
-			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', 'WhereCondition target must be a valid identifier');
+			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', 'WhereClause target must be a valid identifier');
 			new WhereClause($target);
 		} else {
 			$cond = new WhereClause($target);
@@ -74,13 +74,13 @@ class WhereConditionTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\WhereCondition::setOperator
+	 * @covers \Clara\Database\Statement\WhereClause::setOperator
 	 * @dataProvider provideOperators
 	 */
 	public function testSetOperator($operator, $expectException) {
 		$cond = new WhereClause('foo');
 		if($expectException) {
-			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('Invalid WhereCondition operator: "%s"', $operator));
+			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('Invalid WhereClause operator: "%s"', $operator));
 			$cond->setOperator($operator);
 		} else {
 			$cond->setOperator($operator);
@@ -107,13 +107,13 @@ class WhereConditionTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\WhereCondition::setPredicate
+	 * @covers \Clara\Database\Statement\WhereClause::setPredicate
 	 * @dataProvider providePredicates
 	 */
 	public function testSetPredicate($predicate, $expectException, $expected='') {
 		$cond = new WhereClause('foo');
 		if($expectException) {
-			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('Invalid WhereCondition predicate. Expecting string|int|Statement, received %s', gettype($predicate)));
+			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('Invalid WhereClause predicate. Expecting string|int|Statement, received %s', gettype($predicate)));
 			$cond->setPredicate($predicate);
 		} else {
 			$cond->setPredicate($predicate);
@@ -133,13 +133,13 @@ class WhereConditionTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\WhereCondition::setPreceder
+	 * @covers \Clara\Database\Statement\WhereClause::setPreceder
 	 * @dataProvider providePreceders
 	 */
 	public function testSetPreceder($preceder, $expectException) {
 		$condition = new WhereClause('foo');
 		if($expectException) {
-			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('Invalid WhereCondition preceder. Expecting AND|OR'));
+			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('Invalid WhereClause preceder. Expecting AND|OR'));
 			$condition->setPreceder($preceder);
 		} else {
 			$condition->setPreceder($preceder);
@@ -160,7 +160,7 @@ class WhereConditionTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\WhereCondition::__toString
+	 * @covers \Clara\Database\Statement\WhereClause::__toString
 	 * @dataProvider provideCompleteConditionsAndExpectedStrings
 	 * @todo: nested where conditions
 	 */
@@ -185,12 +185,12 @@ class WhereConditionTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\WhereCondition::fromString
+	 * @covers \Clara\Database\Statement\WhereClause::fromString
 	 * @dataProvider provideStringsForTesting
 	 */
 	public function testFromString($str, $expected) {
 		if(false === $expected) {
-			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('WhereCondition::fromString failed with input "%s"', $str));
+			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('WhereClause::fromString failed with input "%s"', $str));
 			WhereClause::fromString($str);
 		} else {
 			$cond = WhereClause::fromString($str);

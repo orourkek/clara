@@ -13,7 +13,7 @@ use Clara\Database\Statement\Identifier;
 class IdentifierTest extends PHPUnit_Framework_TestCase {
 
 	/**
-	 * @covers Clara\Database\Statement\Identifier::__construct
+	 * @covers \Clara\Database\Statement\Identifier::__construct
 	 */
 	public function testBasicCreate() {
 		$name = 'foo';
@@ -29,12 +29,12 @@ class IdentifierTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\Identifier::getName
-	 * @covers Clara\Database\Statement\Identifier::getAlias
-	 * @covers Clara\Database\Statement\Identifier::getPrefix
-	 * @covers Clara\Database\Statement\Identifier::setName
-	 * @covers Clara\Database\Statement\Identifier::setAlias
-	 * @covers Clara\Database\Statement\Identifier::setPrefix
+	 * @covers \Clara\Database\Statement\Identifier::getName
+	 * @covers \Clara\Database\Statement\Identifier::getAlias
+	 * @covers \Clara\Database\Statement\Identifier::getPrefix
+	 * @covers \Clara\Database\Statement\Identifier::setName
+	 * @covers \Clara\Database\Statement\Identifier::setAlias
+	 * @covers \Clara\Database\Statement\Identifier::setPrefix
 	 * @depends testBasicCreate
 	 */
 	public function testGettersAndSetters(Identifier $id) {
@@ -68,7 +68,7 @@ class IdentifierTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\Identifier::__construct
+	 * @covers \Clara\Database\Statement\Identifier::__construct
 	 * @dataProvider provideInvalidNames
 	 * @expectedException \Clara\Database\Statement\Exception\StatementException
 	 */
@@ -85,7 +85,7 @@ class IdentifierTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\Identifier::__toString
+	 * @covers \Clara\Database\Statement\Identifier::__toString
 	 * @dataProvider provideIdentifiersAndExpectedStrings
 	 */
 	public function testToString($name, $alias, $prefix, $expected) {
@@ -105,7 +105,7 @@ class IdentifierTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\Identifier::isValid
+	 * @covers \Clara\Database\Statement\Identifier::isValid
 	 * @dataProvider provideIdentifierNamesForTesting
 	 */
 	public function testStaticIdentifierValidation($name, $isAlias, $expected) {
@@ -125,7 +125,7 @@ class IdentifierTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\Identifier::fromString
+	 * @covers \Clara\Database\Statement\Identifier::fromString
 	 * @dataProvider provideStringsForTesting
 	 */
 	public function testFromString($string, $prefix, $name, $alias) {
@@ -136,7 +136,7 @@ class IdentifierTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\Identifier::fromString
+	 * @covers \Clara\Database\Statement\Identifier::fromString
 	 * @dataProvider provideInvalidNames
 	 * @expectedException \Clara\Database\Statement\Exception\StatementException
 	 */

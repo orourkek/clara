@@ -16,7 +16,7 @@ use Clara\Database\Statement\OrderClause;
 class SelectTest extends PHPUnit_Framework_TestCase {
 
 	/**
-	 * @covers Clara\Database\Statement\Select::column
+	 * @covers \Clara\Database\Statement\Select::column
 	 */
 	public function testAddingSingleColumn() {
 		$stmt = new Select();
@@ -27,7 +27,7 @@ class SelectTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\Select::columns
+	 * @covers \Clara\Database\Statement\Select::columns
 	 */
 	public function testAddingMultipleColumns() {
 		$stmt = new Select();
@@ -42,7 +42,7 @@ class SelectTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\Select::from
+	 * @covers \Clara\Database\Statement\Select::from
 	 */
 	public function testFromWithAlias() {
 		$stmt = new Select();
@@ -64,7 +64,7 @@ class SelectTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\Select::where
+	 * @covers \Clara\Database\Statement\Select::where
 	 * @dataProvider provideWhereClauses
 	 */
 	public function testAddWhereClauses($args, $expectedResult) {
@@ -93,7 +93,7 @@ class SelectTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\Select::limit
+	 * @covers \Clara\Database\Statement\Select::limit
 	 * @dataProvider provideLimits
 	 */
 	public function testLimit($arg1, $arg2, $expected) {
@@ -108,7 +108,7 @@ class SelectTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\Select::orderBy
+	 * @covers \Clara\Database\Statement\Select::orderBy
 	 * @dataProvider provideLimits
 	 */
 	public function testOrderBy() {
@@ -149,8 +149,8 @@ class SelectTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Database\Statement\Select::__toString
-	 * @covers Clara\Database\Statement\Select::compileStatement
+	 * @covers \Clara\Database\Statement\Select::__toString
+	 * @covers \Clara\Database\Statement\Select::compileStatement
 	 * @dataProvider provideCompleteStatementsAndExpectedStrings
 	 */
 	public function testToString($statement, $expected) {
