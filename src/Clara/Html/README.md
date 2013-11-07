@@ -1,7 +1,7 @@
 Clara\Html
 ==========
 
-Contained within are helper classes for HTML related stuff.
+Helper classes for HTML related stuff.
 
 
 Overview

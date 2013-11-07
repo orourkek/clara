@@ -1,7 +1,7 @@
 Clara\Support
 =============
 
-This area is for support classes: data structures, extremely generalized APIs, and other 'meta' classes that don't fit into another namespace.
+This area is for support classes: data structures, extremely generalized APIs, and other 'meta' classes/interfaced that don't fit into another namespace.
 
 
 NOTE
