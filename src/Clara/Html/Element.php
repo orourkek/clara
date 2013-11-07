@@ -123,7 +123,7 @@ abstract class Element {
 	 * @return string
 	 */
 	public function content() {
-		return implode(' ', $this->content);
+		return implode('', $this->content);
 	}
 
 	/**

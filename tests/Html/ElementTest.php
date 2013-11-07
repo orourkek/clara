@@ -193,7 +193,7 @@ class ElementTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame('hello, world!', $elem->content());
 		$elem2 = new BarElement();
 		$elem->addContent($elem2);
-		$this->assertSame('hello, world! <bar></bar>', $elem->content());
+		$this->assertSame('hello, world!<bar></bar>', $elem->content());
 	}
 
 	/**
@@ -222,11 +222,11 @@ class ElementTest extends PHPUnit_Framework_TestCase {
 			),
 			array(
 				$elem4->addContent('foo bar')->addContent($elem2),
-				'<foo>foo bar <foo id="foo"><bar></bar></foo></foo>',
+				'<foo>foo bar<foo id="foo"><bar></bar></foo></foo>',
 			),
 			array(
 				$elem5->addAttribute('data-foobarbaztaz', '')->addContent($elem4),
-				'<foo data-foobarbaztaz=""><foo>foo bar <foo id="foo"><bar></bar></foo></foo></foo>',
+				'<foo data-foobarbaztaz=""><foo>foo bar<foo id="foo"><bar></bar></foo></foo></foo>',
 			),
 		);
 	}
