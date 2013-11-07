@@ -93,4 +93,14 @@ class Input extends SelfClosingElement {
 		return $this->addAttribute('value', $value);
 	}
 
+	/**
+	 * Shortcut method for a common attribute for this element type
+	 *
+	 * @param $value
+	 * @return $this
+	 */
+	public function placeholder($value) {
+		return $this->addAttribute('placeholder', $value);
+	}
+
 }
