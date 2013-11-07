@@ -4,7 +4,7 @@ if(empty($phpunit)) {
 	die('phpunit not found, aborting.');
 }
 
-$toSkip = array('mock');
+$toSkip = array('mock', 'README.md');
 
 foreach(scandir(__DIR__ . '/tests') as $item) {
 	if(in_array($item, $toSkip) || 0 === strpos($item, '.')) {
