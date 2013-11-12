@@ -42,7 +42,8 @@ class FilesystemTest extends PHPUnit_Framework_TestCase {
 			&& mkdir('/tmp/clara/ddiirr')
 			&& false !== file_put_contents('/tmp/clara/ddiirr/foo', 'baz')
 			&& false !== file_put_contents('/tmp/clara/unreadable', '')
-			&& chmod('/tmp/clara/unreadable', 0333)) {
+			&& chmod('/tmp/clara/unreadable', 0333)
+			) {
 				$this->fs = new Filesystem();
 				return true;
 			}

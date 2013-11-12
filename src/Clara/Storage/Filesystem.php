@@ -46,7 +46,9 @@ class Filesystem {
 		}
 		if(is_dir($fileOrDir) && $recursive) {
 			foreach(new RecursiveDirectoryIterator($fileOrDir) as $fileInfo) {
-				return $this->chmod($fileInfo->getPathName(), $mode, true);
+				if( ! in_array($fileInfo->getFileName(), array('.', '..'))) {
+					return $this->chmod($fileInfo->getPathName(), $mode, true);
+				}
 			}
 		}
 		return $this;
@@ -70,7 +72,9 @@ class Filesystem {
 		}
 		if(is_dir($fileOrDir) && $recursive) {
 			foreach(new RecursiveDirectoryIterator($fileOrDir) as $fileInfo) {
-				return $this->chown($fileInfo->getPathName(), $newOwner, true);
+				if( ! in_array($fileInfo->getFileName(), array('.', '..'))) {
+					return $this->chown($fileInfo->getPathName(), $newOwner, true);
+				}
 			}
 		}
 	}
@@ -115,7 +119,9 @@ class Filesystem {
 				throw new UnexpectedFileException(sprintf('Failed to delete "%s" - directory not empty', $fileOrDir));
 			}
 			foreach(new RecursiveDirectoryIterator($fileOrDir) as $fileInfo) {
-				$this->delete($fileInfo->getPathName(), true);
+				if( ! in_array($fileInfo->getFileName(), array('.', '..'))) {
+					$this->delete($fileInfo->getPathName(), true);
+				}
 			}
 			if( ! rmdir($fileOrDir)) {
 				throw new IOException(sprintf('Delete failed on directory "%s"', $fileOrDir));
