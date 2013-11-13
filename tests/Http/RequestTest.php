@@ -133,8 +133,8 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$expectedUri = 'https://foobar.baz/taz?foo=1';
 
 		$_GET['foo'] = 'bar';
-		$_POST['baz'] = 'taz';
-		$_COOKIE['oof'] = 'rab';
+		$_POST['foo'] = 'bar';
+		$_COOKIE['foo'] = 'bar';
 
 		$request = Request::createFromEnvironment();
 		//check type
@@ -148,6 +148,12 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame($_SERVER['HTTP_USER_AGENT'], $request->getHeader('User-Agent'));
 		$this->assertSame($_SERVER['HTTP_ACCEPT'], $request->getHeader('Accept'));
 		$this->assertSame($_SERVER['HTTP_CONNECTION'], $request->getHeader('Connection'));
+		//check GET vars
+		$this->assertSame('bar', $request->get('foo'));
+		//check POST vars
+		$this->assertSame('bar', $request->post('foo'));
+		//check COOKIE vars
+		$this->assertSame('bar', $request->cookie('foo'));
 	}
 
 }
