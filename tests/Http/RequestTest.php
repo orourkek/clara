@@ -8,8 +8,9 @@
  * @package     Clara
  */
 
-use Clara\Http\Request,
-	Clara\Http\Uri;
+use Clara\Http\Request;
+use Clara\Http\Uri;
+use Clara\Support\Collection;
 
 
 class RequestTest extends PHPUnit_Framework_TestCase {
@@ -61,6 +62,63 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 
+	/**
+	 * @covers Clara\Http\Request::setGetVars
+	 * @covers Clara\Http\Request::get
+	 */
+	public function testGetVars() {
+		$vars = array(
+			'foo' => 'bar',
+			'baz' => 'taz',
+		);
+		$expected = new Collection($vars);
+		$request = new Request();
+		$request->setGetVars($vars);
+		$this->assertAttributeEquals($expected, 'getVars', $request);
+
+		$this->assertSame('bar', $request->get('foo'));
+		$this->assertSame('taz', $request->get('baz'));
+	}
+
+	/**
+	 * @covers Clara\Http\Request::setPostVars
+	 * @covers Clara\Http\Request::post
+	 */
+	public function testPostVars() {
+		$vars = array(
+			'foo' => 'bar',
+			'baz' => 'taz',
+		);
+		$expected = new Collection($vars);
+		$request = new Request();
+		$request->setPostVars($vars);
+		$this->assertAttributeEquals($expected, 'postVars', $request);
+
+		$this->assertSame('bar', $request->post('foo'));
+		$this->assertSame('taz', $request->post('baz'));
+	}
+
+	/**
+	 * @covers Clara\Http\Request::setCookies
+	 * @covers Clara\Http\Request::cookie
+	 */
+	public function testCookies() {
+		$vars = array(
+			'foo' => 'bar',
+			'baz' => 'taz',
+		);
+		$expected = new Collection($vars);
+		$request = new Request();
+		$request->setCookies($vars);
+		$this->assertAttributeEquals($expected, 'cookies', $request);
+
+		$this->assertSame('bar', $request->cookie('foo'));
+		$this->assertSame('taz', $request->cookie('baz'));
+	}
+
+	/**
+	 * @covers Clara\Http\Request::createFromEnvironment
+	 */
 	public function testCreateFromEnvironment() {
 		$_SERVER['HTTPS'] = 'on';
 		$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
@@ -73,6 +131,10 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$_SERVER['HTTP_ACCEPT'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
 		$_SERVER['HTTP_CONNECTION'] = 'keep-alive';
 		$expectedUri = 'https://foobar.baz/taz?foo=1';
+
+		$_GET['foo'] = 'bar';
+		$_POST['baz'] = 'taz';
+		$_COOKIE['oof'] = 'rab';
 
 		$request = Request::createFromEnvironment();
 		//check type

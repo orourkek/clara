@@ -9,6 +9,7 @@
  */
 
 namespace Clara\Http;
+use Clara\Support\Collection;
 
 
 /**
@@ -29,6 +30,30 @@ class Request extends Message {
 	protected $uri;
 
 	/**
+	 * @var \Clara\Support\Collection
+	 */
+	protected $getVars;
+
+	/**
+	 * @var \Clara\Support\Collection
+	 */
+	protected $postVars;
+
+	/**
+	 * @var \Clara\Support\Collection
+	 */
+	protected $cookies;
+
+	/**
+	 *
+	 */
+	public function __construct() {
+		$this->getVars = new Collection();
+		$this->postVars = new Collection();
+		$this->cookies = new Collection();
+	}
+
+	/**
 	 * @return \Clara\Http\Request
 	 */
 	public static function createFromEnvironment() {
@@ -42,6 +67,9 @@ class Request extends Message {
 		$request->setUri($fullUriString);
 		$request->setMethod($_SERVER['REQUEST_METHOD']);
 		$request->setProtocol($_SERVER['SERVER_PROTOCOL']);
+		$request->setGetVars($_GET);
+		$request->setPostVars($_POST);
+		$request->setCookies($_COOKIE);
 
 		if(function_exists("apache_request_headers") && $headers = apache_request_headers()) {
 				/*
@@ -60,7 +88,6 @@ class Request extends Message {
 				}
 			}
 		}
-
 		return $request;
 	}
 
@@ -106,5 +133,70 @@ class Request extends Message {
 		return $this->uri;
 	}
 
+	/**
+	 * @param $vars
+	 * @return $this
+	 */
+	public function setGetVars($vars) {
+		if( ! is_array($vars)) {
+			$vars = array($vars);
+		}
+		$this->getVars = new Collection($vars);
+		return $this;
+	}
+
+	/**
+	 * @param $vars
+	 * @return $this
+	 */
+	public function setPostVars($vars) {
+		if( ! is_array($vars)) {
+			$vars = array($vars);
+		}
+		$this->postVars = new Collection($vars);
+		return $this;
+	}
+
+	/**
+	 * @param $vars
+	 * @return $this
+	 */
+	public function setCookies($vars) {
+		if( ! is_array($vars)) {
+			$vars = array($vars);
+		}
+		$this->cookies = new Collection($vars);
+		return $this;
+	}
+
+	/**
+	 * Retrieves a value from $_GET
+	 *
+	 * @param mixed $key
+	 * @return mixed
+	 */
+	public function get($key) {
+		return $this->getVars[$key];
+	}
+
+	/**
+	 * Retrieves a value from $_POST
+	 *
+	 * @param mixed $key
+	 * @return mixed
+	 */
+	public function post($key) {
+		return $this->postVars[$key];
+	}
+
+	/**
+	 * Retrieves a value from $_COOKIE
+	 *
+	 * @param mixed $key
+	 * @return mixed
+	 */
+	public function cookie($key) {
+		return $this->cookies[$key];
+	}
 
 }
