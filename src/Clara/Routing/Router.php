@@ -37,7 +37,7 @@ class Router extends Observable {
 	 * @param Request $request
 	 * @return bool
 	 */
-	public function Route(Request $request) {
+	public function route(Request $request) {
 		if( empty($this->routes)) {
 			trigger_error('Router::route called with no routes loaded', E_USER_WARNING);
 		} else {
