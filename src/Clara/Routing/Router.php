@@ -35,7 +35,7 @@ class Router extends Observable {
 
 	/**
 	 * @param Request $request
-	 * @return bool
+	 * @return \Clara\Routing\Route|bool
 	 */
 	public function route(Request $request) {
 		if( empty($this->routes)) {
