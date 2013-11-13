@@ -32,7 +32,7 @@ class Route {
 	protected $pattern;
 
 	/**
-	 * @var callable
+	 * @var mixed
 	 */
 	protected $handler;
 
@@ -84,18 +84,17 @@ class Route {
 	public function setHandler($handler) {
 		if( ! is_callable($handler)) {
 			if(is_string($handler) && 1 === preg_match('#^(?P<className>[a-zA-Z]+)@(?P<methodName>[a-zA-Z]+)$#', $handler, $matches)) {
-				// @codeCoverageIgnoreStart
-				throw new RoutingException('The "className@methodName" handler scheme has not yet been implemented');
-				// @codeCoverageIgnoreEnd
+				$handler = new ControllerHandler($matches['className'], $matches['methodName']);
+			} else {
+				throw new RoutingException('Route handler must be callable OR follow guidelines outlined within Clara\Routing\Route');
 			}
-			throw new RoutingException('Route handler must be callable OR follow guidelines outlined within Clara\Routing\Route');
 		}
 		$this->handler = $handler;
 		return $this;
 	}
 
 	/**
-	 * @return callable
+	 * @return mixed
 	 */
 	public function getHandler() {
 		return $this->handler;
@@ -156,10 +155,9 @@ class Route {
 	}
 
 	/**
-	 * @param $regex
 	 * @throws \Clara\Routing\Exception\RoutingException
 	 */
-	public function setRegex($regex) {
+	public function setRegex() {
 		throw new RoutingException('The "regex" property is immutable. See Clara\Routing\Route::setPattern');
 	}
 
@@ -223,6 +221,20 @@ class Route {
 
 		}
 		return (1 === $result) ? true : false;
+	}
+
+	/**
+	 * Runs the route as defined
+	 *
+	 * @return mixed
+	 */
+	public function run() {
+		if($this->handler instanceof ControllerHandler) {
+			$callable = $this->handler->getCallable();
+		} else {
+			$callable = $this->handler;
+		}
+		return call_user_func_array($callable, $this->parameters);
 	}
 
 	/**

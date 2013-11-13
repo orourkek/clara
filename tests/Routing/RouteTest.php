@@ -8,14 +8,17 @@
  * @package     Clara
  */
 
-use Clara\Routing\Route,
-	Clara\Http\Request,
-	Clara\Routing\Exception\RoutingException;
+use Clara\Routing\Route;
+use Clara\Http\Request;
 
 
 class hasCallable {
 	public static function staticFoo() {}
 	public function foo() {}
+}
+class tester {
+	public function foo() { return func_get_args(); }
+	public static function staticFoo() { return func_get_args(); }
 }
 
 class RouteTest extends PHPUnit_Framework_TestCase {
@@ -26,8 +29,8 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Routing\Route::setName
-	 * @covers Clara\Routing\Route::getName
+	 * @covers \Clara\Routing\Route::setName
+	 * @covers \Clara\Routing\Route::getName
 	 */
 	public function testNaming() {
 		$route = Route::get('/', function(){});
@@ -39,13 +42,13 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Tests the basic manual construction of a route, via `new`
 	 *
-	 * @covers Clara\Routing\Route::__construct
-	 * @covers Clara\Routing\Route::setMethods
-	 * @covers Clara\Routing\Route::getMethods
-	 * @covers Clara\Routing\Route::setPattern
-	 * @covers Clara\Routing\Route::getPattern
-	 * @covers Clara\Routing\Route::setHandler
-	 * @covers Clara\Routing\Route::getHandler
+	 * @covers \Clara\Routing\Route::__construct
+	 * @covers \Clara\Routing\Route::setMethods
+	 * @covers \Clara\Routing\Route::getMethods
+	 * @covers \Clara\Routing\Route::setPattern
+	 * @covers \Clara\Routing\Route::getPattern
+	 * @covers \Clara\Routing\Route::setHandler
+	 * @covers \Clara\Routing\Route::getHandler
 	 */
 	public function testManualConstruction() {
 		$methods = array('GET', 'POST');
@@ -70,11 +73,11 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Routing\Route::get
-	 * @covers Clara\Routing\Route::post
-	 * @covers Clara\Routing\Route::delete
-	 * @covers Clara\Routing\Route::put
-	 * @covers Clara\Routing\Route::canHandleMethod
+	 * @covers \Clara\Routing\Route::get
+	 * @covers \Clara\Routing\Route::post
+	 * @covers \Clara\Routing\Route::delete
+	 * @covers \Clara\Routing\Route::put
+	 * @covers \Clara\Routing\Route::canHandleMethod
 	 */
 	public function testStaticConstruction() {
 		$pattern = '/foo/bar';
@@ -99,7 +102,7 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 			array(function(){}, false),
 			array(array(new HasCallable(), 'foo'), false),
 			array('hasCallable::staticFoo', false),
-//NYI		array('hasCallable@foo', false),
+			array('hasCallable@foo', false),
 			array('', true),
 			array(false, true),
 			array(null, true),
@@ -109,7 +112,7 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Routing\Route::setHandler
+	 * @covers \Clara\Routing\Route::setHandler
 	 * @dataProvider provideHandlers
 	 */
 	public function testSetHandler($handler, $expectingException) {
@@ -124,7 +127,7 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Routing\Route::compileRegex
+	 * @covers \Clara\Routing\Route::compileRegex
 	 */
 	public function testBasicRegexConstruction() {
 		$pattern = '/foo/bar';
@@ -135,8 +138,8 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Routing\Route::compileRegex
-	 * @covers Clara\Routing\Route::getRegex
+	 * @covers \Clara\Routing\Route::compileRegex
+	 * @covers \Clara\Routing\Route::getRegex
 	 */
 	public function testRegexConstructionWithParameters() {
 		$pattern = '/foo/bar/{variable1}/{variable2}';
@@ -159,7 +162,7 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Routing\Route::compileRegex
+	 * @covers \Clara\Routing\Route::compileRegex
 	 * @expectedException Clara\Routing\Exception\RoutingException
 	 */
 	public function testDuplicateParametersNotAllowed() {
@@ -168,7 +171,7 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 
 
 	/**
-	 * @covers Clara\Routing\Route::setRegex
+	 * @covers \Clara\Routing\Route::setRegex
 	 * @expectedException Clara\Routing\Exception\RoutingException
 	 */
 	public function testRegexIsImmutable() {
@@ -193,7 +196,7 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Routing\Route::matches
+	 * @covers \Clara\Routing\Route::matches
 	 * @dataProvider provideRoutesForMatchingTests
 	 */
 	public function testRouteMatching($method, $uri, $expectedResult) {
@@ -205,8 +208,8 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @test
-	 * @covers Clara\Routing\Route::matches
-	 * @covers Clara\Routing\Route::compileRegex
+	 * @covers \Clara\Routing\Route::matches
+	 * @covers \Clara\Routing\Route::compileRegex
 	 */
 	public function partialPatternMatchesShouldNotBeMatched() {
 		$request = new Request();
@@ -216,7 +219,7 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Routing\Route::matches
+	 * @covers \Clara\Routing\Route::matches
 	 */
 	public function testMatchingRouteWithMultipleMethods() {
 		$route = new Route(array('GET', 'POST'), '/foo/{var}', function(){});
@@ -228,10 +231,10 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Routing\Route::compileRegex
-	 * @covers Clara\Routing\Route::getParameters
-	 * @covers Clara\Routing\Route::getParameterValues
-	 * @covers Clara\Routing\Route::getParameterKeys
+	 * @covers \Clara\Routing\Route::compileRegex
+	 * @covers \Clara\Routing\Route::getParameters
+	 * @covers \Clara\Routing\Route::getParameterValues
+	 * @covers \Clara\Routing\Route::getParameterKeys
 	 */
 	public function testParametersAndMatchingWithParameters() {
 		$request = new Request();
@@ -253,7 +256,7 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Routing\Route::patternIsValid
+	 * @covers \Clara\Routing\Route::patternIsValid
 	 */
 	public function testStaticPatternIsValidMethod() {
 		$this->assertTrue(Route::patternIsValid('/'));
@@ -270,7 +273,7 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Routing\Route::setPattern
+	 * @covers \Clara\Routing\Route::setPattern
 	 * @expectedException Clara\Routing\Exception\RoutingException
 	 */
 	public function testInvalidPatternThrowsExceptionFromConstructor() {
@@ -279,13 +282,38 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Routing\Route::setPattern
+	 * @covers \Clara\Routing\Route::setPattern
 	 * @expectedException Clara\Routing\Exception\RoutingException
 	 */
 	public function testInvalidPatternThrowsExceptionFromSetter() {
 		$invalidPattern = '/{}_()*^&%&^$%#$@@$%&*(';
 		$route = Route::get('/valid/pattern', function(){});
 		$route->setPattern($invalidPattern);
+	}
+
+	public function provideVariousRoutesWithArgs() {
+		return array(
+			array(new Route('GET', '/foo/{var1}/{var2}', function() { return func_get_args(); })),
+			array(new Route('GET', '/foo/{var1}/{var2}', 'tester@foo')),
+			array(new Route('GET', '/foo/{var1}/{var2}', 'tester::staticFoo')),
+			array(new Route('GET', '/foo/{var1}/{var2}', array(new tester(), 'foo'))),
+		);
+	}
+
+	/**
+	 * @covers \Clara\Routing\Route::run
+	 * @dataProvider provideVariousRoutesWithArgs
+	 */
+	public function testRunSendsArgs(Route $route) {
+		$request = new Request();
+		$request->setUri('/foo/bar/baz')->setMethod('GET');
+
+		if($route->matches($request)) {
+			$result = $route->run();
+			$this->assertSame(array('bar', 'baz'), $result);
+		} else {
+			$this->fail('Route failed to match request, something is seriously wrong here...');
+		}
 	}
 
 }
