@@ -40,9 +40,9 @@ class Event {
 	protected $timestamp;
 
 	/**
-	 * @param      $name
-	 * @param null $subject
-	 * @param null $context
+	 * @param       $name
+	 * @param mixed $subject
+	 * @param mixed $context
 	 */
 	public function __construct($name, $subject=null, $context=null) {
 		$this->name = $name;
