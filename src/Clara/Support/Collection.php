@@ -128,7 +128,7 @@ class Collection implements Countable, ArrayAccess, IteratorAggregate {
 	 * @return mixed
 	 */
 	public function offsetGet($key) {
-		return $this->items[$key];
+		return $this->has($key) ? $this->items[$key] : null;
 	}
 
 	/**
