@@ -66,6 +66,14 @@ class Collection implements Countable, ArrayAccess, IteratorAggregate {
 	}
 
 	/**
+	 * @param $key
+	 * @return bool
+	 */
+	public function has($key) {
+		return array_key_exists($key, $this->items);
+	}
+
+	/**
 	 * @param int  $offset
 	 * @param null $length
 	 * @return array
