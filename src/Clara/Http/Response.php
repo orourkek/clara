@@ -226,6 +226,7 @@ class Response extends Message implements Stringable {
 		foreach($this->headers as $key => $val) {
 			header($key . ': ' . $val, false);
 		}
+		return $this;
 	}
 
 	/**
