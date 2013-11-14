@@ -35,10 +35,11 @@ class Filesystem {
 	}
 
 	/**
-	 * @param     $fileOrDir
-	 * @param int $mode
-	 * @return $this
+	 * @param      $fileOrDir
+	 * @param int  $mode
+	 * @param bool $recursive
 	 * @throws \Clara\Storage\Exception\IOException
+	 * @return $this
 	 */
 	public function chmod($fileOrDir, $mode=0666, $recursive=false) {
 		if( ! @chmod($fileOrDir, $mode)) {
@@ -212,6 +213,7 @@ class Filesystem {
 	 * @param      $path
 	 * @param int  $mode
 	 * @param bool $recursive
+	 * @throws \Clara\Storage\Exception\IOException
 	 * @return bool
 	 */
 	public function mkdir($path, $mode=0777, $recursive=true) {
@@ -249,6 +251,7 @@ class Filesystem {
 	 * @param $target
 	 * @return $this
 	 * @throws \Clara\Storage\Exception\IOException
+	 * @throws \Clara\Storage\Exception\FileNotFoundException
 	 */
 	public function rename($source, $target) {
 		if( ! file_exists($source)) {
