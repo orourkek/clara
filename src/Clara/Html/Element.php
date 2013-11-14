@@ -11,9 +11,14 @@
 namespace Clara\Html;
 
 use Clara\Exception\ClaraDomainException;
+use Clara\Support\Contract\Stringable;
 
-
-abstract class Element {
+/**
+ * Represents an abstract HTML element
+ *
+ * @package Clara\Html
+ */
+abstract class Element implements Stringable {
 
 	/**
 	 * The element type, e.g. "input", "form", "img", "strong"
@@ -23,11 +28,15 @@ abstract class Element {
 	protected $type = '';
 
 	/**
+	 * Array of element attributes (\Clara\Html\Attribute)
+	 *
 	 * @var \Clara\Html\Attribute[]
 	 */
 	protected $attributes = array();
 
 	/**
+	 * Array of element content (order is preserved on string compilation)
+	 *
 	 * @var string|\Clara\Html\Element[]
 	 */
 	protected $content = array();
@@ -40,6 +49,8 @@ abstract class Element {
 	protected $allowedAttributes = array();
 
 	/**
+	 * Globally allowed attributes. See @link for mroe info
+	 *
 	 * @var string[]
 	 * @link https://developer.mozilla.org/en-US/docs/HTML/Global_attributes
 	 */
@@ -181,6 +192,8 @@ abstract class Element {
 	}
 
 	/**
+	 * If the attribute is valid (appears in either globalAttributes or allowedAttributes)
+	 *
 	 * @param string $attribute
 	 * @return bool
 	 */

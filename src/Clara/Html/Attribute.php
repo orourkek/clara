@@ -10,21 +10,26 @@
 
 namespace Clara\Html;
 
+use Clara\Support\Contract\Stringable;
 
 /**
  * Represents an HTML element attribute, e.g. id="myElement"
  *
  * @package Clara\Html
  */
-class Attribute {
+class Attribute implements Stringable {
 
 	/**
-	 * @var
+	 * The attribute name
+	 *
+	 * @var string
 	 */
 	protected $name;
 
 	/**
-	 * @var
+	 * The attribute value
+	 *
+	 * @var string
 	 */
 	protected $value;
 
