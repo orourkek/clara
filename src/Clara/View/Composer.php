@@ -127,7 +127,10 @@ abstract class Composer {
 		$this->response->setHeader('Content-Length', strlen($body));
 		$this->response->setHeader('Date', gmdate('D, d M Y H:i:s \G\M\T', time()));
 		$this->response->setBody($body);
-		return $this->response;
+		$response = $this->response;
+		//clear out the old response
+		$this->response = $this->createResponseObject();
+		return $response;
 	}
 
 	/**
