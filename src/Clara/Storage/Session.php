@@ -12,7 +12,11 @@ namespace Clara\Storage;
 
 use Clara\Exception\ClaraInvalidArgumentException;
 
-
+/**
+ * Wrapper for $_SESSION interaction
+ *
+ * @package Clara\Storage
+ */
 class Session {
 
 	/**

@@ -15,9 +15,11 @@ use Clara\Storage\Exception\IOException;
 use Clara\Storage\Exception\UnexpectedFileException;
 use RecursiveDirectoryIterator;
 use DateTime;
-use Exception;
 
 /**
+ * Filesystem object, for doing filesystem-y things. All methods should be self explanatory.
+ *
+ * @todo make Filesystem extend Observable & fire events
  * @package Clara\Storage
  */
 class Filesystem {
