@@ -10,12 +10,11 @@
 
 namespace Clara\Http;
 
-use \DomainException,
-	\InvalidArgumentException;
-
+use DomainException;
+use InvalidArgumentException;
 
 /**
- * Class Message
+ * Represents a generic HTTP message
  *
  * @package Clara\Http
  */
@@ -29,16 +28,22 @@ abstract class Message {
 	const METHOD_OPTIONS = 'OPTIONS';
 
 	/**
+	 * The HTTP protocol used for the message
+	 *
 	 * @var string
 	 */
 	protected $protocol = 'HTTP/1.1';
 
 	/**
+	 * Headers attached to the message
+	 *
 	 * @var array
 	 */
 	protected $headers = array();
 
 	/**
+	 * Body of the message
+	 *
 	 * @var string
 	 */
 	protected $body = '';
@@ -65,8 +70,6 @@ abstract class Message {
 	 * @param $field
 	 * @return mixed
 	 * @throws \DomainException
-	 *
-	 * @todo getHeader() should be case insensitive
 	 */
 	public function getHeader($field) {
 		if(isset($this->headers[$field])) {
@@ -83,6 +86,8 @@ abstract class Message {
 	}
 
 	/**
+	 * Sets all headers, replacing any existing
+	 *
 	 * @param $headers
 	 * @return $this
 	 * @throws \InvalidArgumentException
@@ -91,6 +96,7 @@ abstract class Message {
 		if( ! is_array($headers) && ! $headers instanceof \Traversable) {
 			throw new InvalidArgumentException('Setting all headers requires a traversable list');
 		}
+		$this->clearHeaders();
 		foreach($headers as $field => $value) {
 			$this->setHeader($field, $value);
 		}
@@ -98,6 +104,8 @@ abstract class Message {
 	}
 
 	/**
+	 * Clears all headers from the message
+	 *
 	 * @return $this
 	 */
 	public function clearHeaders() {

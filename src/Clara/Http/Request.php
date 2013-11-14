@@ -9,37 +9,47 @@
  */
 
 namespace Clara\Http;
+
 use Clara\Support\Collection;
 
-
 /**
- * Class Request
+ * Represents an HTTP request, including all input ($_GET, $_POST, $_COOKIE, etc)
  *
  * @package Clara\Http
  */
 class Request extends Message {
 
 	/**
+	 * HTTP method used for the request
+	 *
 	 * @var string
 	 */
 	protected $method;
 
 	/**
+	 * Request URI (as an object)
+	 *
 	 * @var \Clara\Http\Uri
 	 */
 	protected $uri;
 
 	/**
+	 * Collection of $_GET values sent with the request
+	 *
 	 * @var \Clara\Support\Collection
 	 */
 	protected $getVars;
 
 	/**
+	 * Collection of $_POST values sent with the request
+	 *
 	 * @var \Clara\Support\Collection
 	 */
 	protected $postVars;
 
 	/**
+	 * Collection of $_COOKIE values sent with the request
+	 *
 	 * @var \Clara\Support\Collection
 	 */
 	protected $cookies;
@@ -54,6 +64,8 @@ class Request extends Message {
 	}
 
 	/**
+	 * Creates a Request object from environment superglobals ($_SERVER, etc)
+	 *
 	 * @return \Clara\Http\Request
 	 */
 	public static function createFromEnvironment() {

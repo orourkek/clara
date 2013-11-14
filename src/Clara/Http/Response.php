@@ -10,16 +10,16 @@
 
 namespace Clara\Http;
 
-use \InvalidArgumentException;
-use \OutOfRangeException;
-
+use Clara\Support\Contract\Stringable;
+use InvalidArgumentException;
+use OutOfRangeException;
 
 /**
- * Class Response
+ * An HTTP Response, consisting of a response code, headers, and a body
  *
  * @package Clara\Http
  */
-class Response extends Message {
+class Response extends Message implements Stringable {
 
 	const HTTP_CONTINUE = 100;
 	const HTTP_SWITCHING_PROTOCOLS = 101;
@@ -157,6 +157,8 @@ class Response extends Message {
 	);
 
 	/**
+	 * The HTTP status code of the response
+	 *
 	 * @var int
 	 */
 	protected $statusCode;
@@ -198,6 +200,8 @@ class Response extends Message {
 	}
 
 	/**
+	 * Sends the response by sending headers & echoing the body
+	 *
 	 * @return $this
 	 */
 	public function send() {
@@ -207,6 +211,8 @@ class Response extends Message {
 	}
 
 	/**
+	 * Send the response headers. WILL NOT SEND HEADERS IF headers_sent()!
+	 *
 	 * @return $this
 	 */
 	public function sendHeaders() {
@@ -223,6 +229,8 @@ class Response extends Message {
 	}
 
 	/**
+	 * Sends (echos) the response body
+	 *
 	 * @return $this
 	 */
 	public function sendBody() {
