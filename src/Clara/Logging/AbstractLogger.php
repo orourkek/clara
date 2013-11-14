@@ -13,9 +13,8 @@ namespace Clara\Logging;
 use Clara\Events\Observable;
 use Clara\Events\Event;
 
-
 /**
- * Class AbstractLogger
+ * An abstract logger that complies with the eight log severity levels defined in RFC5424. See @link for more info
  *
  * EVENTS WITHIN:
  *  log.emergency
@@ -28,10 +27,13 @@ use Clara\Events\Event;
  *  log.debug
  *
  * @package Clara\Logging
+ * @link http://tools.ietf.org/html/rfc5424#page-11
  */
 abstract class AbstractLogger extends Observable {
 
 	/**
+	 * Called from every severity level specific method
+	 *
 	 * @param $level
 	 * @param $message
 	 * @return mixed

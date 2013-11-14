@@ -15,26 +15,37 @@ use Clara\Storage\Filesystem;
 use DateTime;
 use DateTimeZone;
 
-
+/**
+ * Writes stuff to log files
+ *
+ * @package Clara\Logging
+ */
 class Writer extends AbstractLogger {
 
 	/**
+	 * Filesystem object used for putting content into files
+	 *
 	 * @var \Clara\Storage\Filesystem
 	 */
 	protected $filesystem;
 
 	/**
+	 * Where the Writer is writing to
+	 *
 	 * @var string
 	 */
 	protected $logsDirectory;
 
 	/**
+	 * How to present timestamps in the log(s)
+	 *
 	 * @var string
 	 */
 	protected $timestampFormat = 'd M Y H:i:s T';
 
 	/**
 	 * @param string $logsDirectory
+	 * @throws \Clara\Exception\ClaraRuntimeException
 	 */
 	public function __construct($logsDirectory) {
 		$this->filesystem = new Filesystem();
@@ -46,6 +57,8 @@ class Writer extends AbstractLogger {
 
 	/**
 	 * @param string $timestampFormat
+	 * @return $this
+	 * @link http://php.net/manual/en/datetime.formats.php
 	 */
 	public function setTimestampFormat($timestampFormat) {
 		$this->timestampFormat = $timestampFormat;
@@ -53,6 +66,8 @@ class Writer extends AbstractLogger {
 	}
 
 	/**
+	 * Logs the $message at a severity of $level
+	 *
 	 * @param        $level
 	 * @param string $message
 	 * @return mixed|void
@@ -65,6 +80,8 @@ class Writer extends AbstractLogger {
 	}
 
 	/**
+	 * Formats a message to be written to a log
+	 *
 	 * @param $message
 	 * @return string
 	 */
@@ -72,8 +89,5 @@ class Writer extends AbstractLogger {
 		$dt = new DateTime("now", new DateTimeZone("UTC"));
 		return sprintf('[%s] %s%s', $dt->format($this->timestampFormat), $message, PHP_EOL);
 	}
-
-
-
 
 } 
