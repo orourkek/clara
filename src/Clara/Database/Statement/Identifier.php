@@ -11,28 +11,34 @@
 namespace Clara\Database\Statement;
 
 use Clara\Database\Statement\Exception\StatementException;
-
+use Clara\Support\Contract\Stringable;
 
 /**
- * This class represents a MySQL identifier (table name, column name, etc).
+ * Represents a MySQL identifier (table name, column name, etc).
  * See @link for information on restrictions and best practices
  *
  * @package Clara\Database\Statement
  * @link http://dev.mysql.com/doc/refman/5.5/en/identifiers.html
  */
-class Identifier {
+class Identifier implements Stringable {
 
 	/**
+	 * The identifier name
+	 *
 	 * @var
 	 */
 	protected $name;
 
 	/**
+	 * Identifier prefix/table identifier (optional)
+	 *
 	 * @var string
 	 */
 	protected $prefix;
 
 	/**
+	 * Alias for the identifier, to be used in "AS ..."
+	 *
 	 * @var string
 	 */
 	protected $alias;
@@ -106,10 +112,13 @@ class Identifier {
 	}
 
 	/**
+	 * Validates the string for use as an Identifier part. See @link for more info
+	 *
 	 * @param      $str
 	 * @param bool $isAlias
 	 * @return bool
 	 * @throws \Clara\Database\Statement\Exception\StatementException
+	 * @link http://dev.mysql.com/doc/refman/5.5/en/identifiers.html
 	 */
 	public static function validate($str, $isAlias=false) {
 		if(self::isValid($str, $isAlias)) {
@@ -120,6 +129,10 @@ class Identifier {
 	}
 
 	/**
+	 * Whether or not (bool) the string is valid for use in an Identifier
+	 *
+	 * @param $str
+	 * @param $isAlias
 	 * @return bool
 	 */
 	public static function isValid($str, $isAlias) {
@@ -133,8 +146,11 @@ class Identifier {
 	}
 
 	/**
+	 * Attempts to construct an Identifier from a string
+	 *
 	 * @param $str
 	 * @return Identifier
+	 * @throws \Clara\Database\Statement\Exception\StatementException
 	 */
 	public static function fromString($str) {
 		if( ! is_string($str)) {

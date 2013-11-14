@@ -11,28 +11,32 @@
 namespace Clara\Database\Statement;
 
 use Clara\Database\Statement\Exception\StatementException;
+use Clara\Support\Contract\Stringable;
 
 /**
- * Class OrderClause
+ * Used to build and represent an order clause in a MySQL statement.
  *
  * @package Clara\Database\Statement
  */
-class OrderClause {
+class OrderClause implements Stringable {
 
 	/**
+	 * The subject/target column for the ordering
+	 *
 	 * @var \Clara\Database\Statement\Identifier
 	 */
 	protected $subject;
 
 	/**
+	 * The order type: "ASC"|"DESC"
+	 *
 	 * @var string
 	 */
 	protected $order = 'ASC';
 
 	/**
-	 * @param        $target
-	 * @param string $operator
-	 * @param string $predicate
+	 * @param        $subject
+	 * @param string $order
 	 */
 	public function __construct($subject, $order='ASC') {
 		$this->setSubject($subject);
@@ -55,6 +59,7 @@ class OrderClause {
 
 	/**
 	 * @param \Clara\Database\Statement\Identifier $subject
+	 * @return $this
 	 */
 	public function setSubject($subject) {
 		$this->subject = Identifier::fromString($subject);

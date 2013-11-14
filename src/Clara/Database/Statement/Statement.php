@@ -9,13 +9,14 @@
  */
 
 namespace Clara\Database\Statement;
+use Clara\Support\Contract\Stringable;
 
 /**
- * Class Statement
+ * Represents an abstract MySQL statement
  *
  * @package Clara\Database\Statement
  */
-abstract class Statement {
+abstract class Statement implements Stringable {
 
 	/**
 	 * @return string
@@ -23,6 +24,8 @@ abstract class Statement {
 	abstract public function __toString();
 
 	/**
+	 * Returns self as a subquery string in parentheses
+	 *
 	 * @return string
 	 */
 	public function toStringAsSubQuery() {

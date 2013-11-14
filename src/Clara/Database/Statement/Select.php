@@ -11,13 +11,14 @@
 namespace Clara\Database\Statement;
 
 use Clara\Database\Statement\Exception\StatementException;
+use Clara\Support\Contract\Stringable;
 
 /**
- * Class Select
+ * Used to build and represent a MySQL SELECT statement
  *
  * @package Clara\Database\Statement
  */
-class Select extends Statement {
+class Select extends Statement implements Stringable {
 
 	/**
 	 * @var \Clara\Database\Statement\Identifier[]
@@ -164,6 +165,7 @@ class Select extends Statement {
 	/**
 	 * @param        $subject
 	 * @param string $order
+	 * @return $this
 	 */
 	public function orderBy($subject, $order='ASC') {
 		$this->orderClauses[] = new OrderClause($subject, $order);
