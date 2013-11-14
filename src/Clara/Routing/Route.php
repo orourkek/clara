@@ -10,43 +10,55 @@
 
 namespace Clara\Routing;
 
-use Clara\Routing\Exception\RoutingException,
-	Clara\Http\Request;
-
+use Clara\Routing\Exception\RoutingException;
+use Clara\Http\Request;
 
 /**
- * Class Route
+ * A route definition
  *
  * @package Clara\Routing
  */
 class Route {
 
 	/**
+	 * The route name (only used internally for convenience)
+	 *
 	 * @var string
 	 */
 	protected $name;
 
 	/**
+	 * The raw pattern (pseudo-regex). Is compiled to a regex in Route::compileRegex()
+	 *
 	 * @var string
 	 */
 	protected $pattern;
 
 	/**
+	 * The handler for the Route (callable or ControllerHandler)
+	 *
 	 * @var mixed
 	 */
 	protected $handler;
 
 	/**
+	 * Array of HTTP methods that this Route should handle
+	 *
 	 * @var array
 	 */
 	protected $methods = array('GET');
 
 	/**
+	 * Regular expression compiled from Route::$pattern through Route::compileRegex()
+	 *
 	 * @var string
 	 */
 	protected $regex;
 
 	/**
+	 * Parameters that are pulled from the request URI when Route::matches() is called.
+	 * Will be passed to the handler as parameters on Route::run()
+	 *
 	 * @var array
 	 */
 	protected $parameters = array();
@@ -155,6 +167,8 @@ class Route {
 	}
 
 	/**
+	 * Throws exception, because this property is immutable.
+	 *
 	 * @throws \Clara\Routing\Exception\RoutingException
 	 */
 	public function setRegex() {
@@ -198,6 +212,9 @@ class Route {
 	}
 
 	/**
+	 * If the Route matches the request (method & pattern)
+	 * On successful match, parameters are pulled from the URI and put into Route::$parameters
+	 *
 	 * @param Request $request
 	 * @return bool
 	 */
@@ -224,7 +241,7 @@ class Route {
 	}
 
 	/**
-	 * Runs the route as defined
+	 * Runs the route as defined, passing control to the handler
 	 *
 	 * @return mixed
 	 */
@@ -238,6 +255,8 @@ class Route {
 	}
 
 	/**
+	 * Compiles the pattern into a regular expression
+	 *
 	 * @param $pattern
 	 * @return string
 	 * @throws \Clara\Routing\Exception\RoutingException
@@ -267,25 +286,19 @@ class Route {
 	}
 
 	/**
+	 * Whether or not the given $input is a valid pattern
+	 *
 	 * @param $input
 	 * @return bool
 	 */
 	public static function patternIsValid($input) {
-		//needs to be a string
-		if( ! is_string($input)) {
-			return false;
-		}
-
-		//ensure the input contains only valid characters
 		$validCharactersRegex = '#^[/\w{}]*$#';
-		if(1 !== preg_match($validCharactersRegex, $input)) {
-			return false;
-		}
-
-		return true;
+		return (is_string($input) && (1 === preg_match($validCharactersRegex, $input)));
 	}
 
 	/**
+	 * Convenience method for constructing a Route object that responds to the GET method
+	 *
 	 * @param $pattern
 	 * @param $handler
 	 * @return \Clara\Routing\Route
@@ -295,6 +308,8 @@ class Route {
 	}
 
 	/**
+	 * Convenience method for constructing a Route object that responds to the POST method
+	 *
 	 * @param $pattern
 	 * @param $handler
 	 * @return \Clara\Routing\Route
@@ -304,6 +319,8 @@ class Route {
 	}
 
 	/**
+	 * Convenience method for constructing a Route object that responds to the PUT method
+	 *
 	 * @param $pattern
 	 * @param $handler
 	 * @return \Clara\Routing\Route
@@ -313,6 +330,8 @@ class Route {
 	}
 
 	/**
+	 * Convenience method for constructing a Route object that responds to the DELETE method
+	 *
 	 * @param $pattern
 	 * @param $handler
 	 * @return \Clara\Routing\Route

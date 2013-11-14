@@ -15,9 +15,8 @@ use Clara\Events\Observable;
 use Clara\Http\Request;
 use Clara\Routing\Exception\RoutingException;
 
-
 /**
- * Class Router
+ * A Router that can route Requests
  *
  * EVENTS WITHIN:
  *  router.route.success
@@ -29,11 +28,15 @@ use Clara\Routing\Exception\RoutingException;
 class Router extends Observable {
 
 	/**
+	 * Array of Routes assigned to this router
+	 *
 	 * @var \Clara\Routing\Route[]
 	 */
 	protected $routes;
 
 	/**
+	 * Matches a request to a Route
+	 *
 	 * @param Request $request
 	 * @return \Clara\Routing\Route|bool
 	 */
@@ -53,6 +56,8 @@ class Router extends Observable {
 	}
 
 	/**
+	 * Adds a Route to the Router
+	 *
 	 * @param $route
 	 * @return $this
 	 * @throws \Clara\Routing\Exception\RoutingException
@@ -68,6 +73,8 @@ class Router extends Observable {
 	}
 
 	/**
+	 * Imports routes to the Router from a properly formatted routes file
+	 *
 	 * @param $location
 	 * @return $this
 	 * @throws \Clara\Routing\Exception\RoutingException

@@ -12,7 +12,6 @@ namespace Clara\Routing;
 
 use Clara\Exception\ClaraInvalidArgumentException;
 
-
 /**
  * Represents a route handler of the scheme "controller@method"
  *
@@ -21,11 +20,15 @@ use Clara\Exception\ClaraInvalidArgumentException;
 class ControllerHandler {
 
 	/**
+	 * The class to be used
+	 *
 	 * @var string
 	 */
 	protected $clazz;
 
 	/**
+	 * The class method to be called
+	 *
 	 * @var string
 	 */
 	protected $method;
@@ -44,6 +47,8 @@ class ControllerHandler {
 	}
 
 	/**
+	 * Instantiates an object of the required class, and returns a callable: array($obj, 'method')
+	 *
 	 * @return callable
 	 */
 	public function getCallable() {
