@@ -217,6 +217,7 @@ class Route {
 	 *
 	 * @param Request $request
 	 * @return bool
+	 * @usedby \Clara\Routing\Router::route
 	 */
 	public function matches(Request $request) {
 		if( ! $this->canHandleMethod($request->getMethod())) {
@@ -244,6 +245,7 @@ class Route {
 	 * Runs the route as defined, passing control to the handler
 	 *
 	 * @return mixed
+	 * @usedby \Clara\Foundation\Application::run
 	 */
 	public function run() {
 		if($this->handler instanceof ControllerHandler) {
