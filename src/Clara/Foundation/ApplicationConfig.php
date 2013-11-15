@@ -26,6 +26,16 @@ class ApplicationConfig extends Collection {
 	 */
 	protected $items = array(
 
+
+		/**********************************************************************
+		 * Logs Directory
+		 **********************************************************************
+		 *
+		 * The location (FULL PATH) where the application should place logs
+		 */
+		'logsDir' => '',
+
+
 		/**********************************************************************
 		 * Routes File
 		 **********************************************************************
@@ -36,6 +46,7 @@ class ApplicationConfig extends Collection {
 		 * See the routing README for information on route file formatting
 		 */
 		'routesFile' => '',
+
 
 	);
 
