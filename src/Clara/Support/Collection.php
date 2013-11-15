@@ -39,8 +39,10 @@ class Collection implements Countable, ArrayAccess, IteratorAggregate {
 	/**
 	 * @param array $items
 	 */
-	public function __construct(array $items = array()) {
-		$this->items = $items;
+	public function __construct(array $items=array()) {
+		if( ! empty($items)) {
+			$this->items = $items;
+		}
 	}
 
 	/**
