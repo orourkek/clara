@@ -49,9 +49,10 @@ class Logger extends Observer {
 	 */
 	protected function constructMessage(Event $event) {
 		$message = sprintf('Event "%s" occurred in "%s"', $event->getName(), get_class($event->getSubject()));
-		if($this->verbose) {
+		$context = $event->getContext();
+		if($this->verbose && ! empty($context)) {
 			ob_start();
-			var_dump($event->getContext());
+			var_dump($context);
 			$message .= sprintf(':%s%s', PHP_EOL, ob_get_clean());
 		}
 		return $message;
