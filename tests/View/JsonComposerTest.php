@@ -33,32 +33,6 @@ class JsonComposerTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame($expected, $response->getBody());
 	}
 
-	public function setUp() {
-
-	}
-
-	/**
-	 * function to recursively delete a directory. Used in tearDown() below.
-	 */
-	private function rrmdir($path) {
-		foreach(glob($path . '/*') as $file) {
-			if(is_dir($file))
-				$this->rrmdir($file);
-			else
-				unlink($file);
-		}
-		rmdir($path);
-	}
-
-	/**
-	 * called after every test in this class
-	 */
-	public function tearDown() {
-		if(is_dir('/tmp/clara')) {
-			$this->rrmdir('/tmp/clara');
-		}
-	}
-
 	/**
 	 * @covers \Clara\View\JsonComposer::composeBody
 	 */
