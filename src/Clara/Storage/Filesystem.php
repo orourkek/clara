@@ -219,7 +219,7 @@ class Filesystem {
 	 * @return bool
 	 */
 	public function mkdir($path, $mode=0777, $recursive=true) {
-		if( ! mkdir($path, $mode, $recursive)) {
+		if( ! @mkdir($path, $mode, $recursive)) {
 			throw new IOException(sprintf('Mkdir failed: "%s" (%o)', $path, $mode));
 		}
 		return $this;

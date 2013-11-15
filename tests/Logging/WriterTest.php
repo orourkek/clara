@@ -63,6 +63,7 @@ class WriterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * @todo constructor was update to attempt to mkdir() the location. Test needs updating...
 	 * @covers \Clara\Logging\Writer::__construct
 	 * @expectedException \Clara\Exception\ClaraRuntimeException
 	 */
