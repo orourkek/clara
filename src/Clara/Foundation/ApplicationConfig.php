@@ -28,6 +28,19 @@ class ApplicationConfig extends Collection {
 
 
 		/**********************************************************************
+		 * Debug Mode
+		 **********************************************************************
+		 *
+		 * Toggles application debug mode
+		 *
+		 * Debug mode ON will attach an observer to the application and
+		 * the router that will log all events to "debug.log" at the location
+		 * defined in "logsDir" below.
+		 */
+		'debug' => false,
+
+
+		/**********************************************************************
 		 * Logs Directory
 		 **********************************************************************
 		 *
