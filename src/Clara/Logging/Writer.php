@@ -11,6 +11,7 @@
 namespace Clara\Logging;
 
 use Clara\Exception\ClaraRuntimeException;
+use Clara\Storage\Exception\IOException;
 use Clara\Storage\Filesystem;
 use DateTime;
 use DateTimeZone;
@@ -50,7 +51,11 @@ class Writer extends AbstractLogger {
 	public function __construct($logsDirectory) {
 		$this->filesystem = new Filesystem();
 		if( ! $this->filesystem->isReadableDirectory($logsDirectory)) {
-			throw new ClaraRuntimeException(sprintf('Invalid logs directory specified: "%s"', $logsDirectory));
+			try {
+				$this->filesystem->mkdir($logsDirectory);
+			} catch(IOException $e) {
+				throw new ClaraRuntimeException(sprintf('Invalid logs directory specified: "%s"', $logsDirectory));
+			}
 		}
 		$this->logsDirectory = $logsDirectory;
 	}
