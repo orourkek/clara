@@ -76,7 +76,7 @@ class Application extends Observable {
 	 */
 	private function applyConfiguration() {
 		if($this->debugMode = $this->config['debug']) {
-			$observer = new Logger($this->config['logsDir']);
+			$observer = new Logger($this->config['logsDir'], true);
 			$this->attach($observer);
 			$this->router->attach($observer);
 			$this->fire(new Event('application.debug-on', $this));
