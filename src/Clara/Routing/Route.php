@@ -224,7 +224,7 @@ class Route {
 			return false;
 		}
 		$matches = array();
-		$result = preg_match($this->regex, (string) $request->getUri(), $matches);
+		$result = preg_match($this->regex, $request->getUri()->getRequestUri(), $matches);
 		if( ! empty($matches)) {
 			//get rid of the full pattern match
 			if(array_shift($matches) && ! empty($matches)) {
