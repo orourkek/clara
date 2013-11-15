@@ -17,6 +17,7 @@ use Clara\Http\Request;
 use Clara\Http\Response;
 use Clara\Routing\Exception\RoutingException;
 use Clara\Routing\Router;
+use Clara\Support\ErrorLogger;
 
 /**
  * Class Application
@@ -45,6 +46,7 @@ class Application extends Observable {
 	 */
 	public function __construct(ApplicationConfig $config) {
 		$this->config = $config;
+		$this->registerErrorHandler();
 		$this->router = new Router();
 		$this->applyConfiguration();
 		$this->fire(new Event('application.created', $this));
@@ -70,11 +72,22 @@ class Application extends Observable {
 	}
 
 	/**
+	 * Registers a handler for errors and exceptions
+	 *
+	 * @return $this
+	 */
+	protected function registerErrorHandler() {
+		$handler = new ErrorLogger($this->config['logsDir']);
+		$handler->register();
+		return $this;
+	}
+
+	/**
 	 * Applies loaded configuration values to the application
 	 *
 	 * @return $this
 	 */
-	private function applyConfiguration() {
+	private final function applyConfiguration() {
 		if($this->debugMode = $this->config['debug']) {
 			$observer = new Logger($this->config['logsDir'], true);
 			$this->attach($observer);
