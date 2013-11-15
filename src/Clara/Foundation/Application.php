@@ -62,7 +62,7 @@ class Application extends Observable {
 			$this->fire(new Event('application.run.response', $this, $response));
 			$response->send();
 		} else {
-			$this->fire(new Event('application.run.not-found', $this, $response));
+			$this->fire(new Event('application.run.not-found', $this));
 			$response = new Response('404 Not Found', Response::HTTP_NOT_FOUND);
 			$response->send();
 		}
