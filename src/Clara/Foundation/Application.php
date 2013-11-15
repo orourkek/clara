@@ -12,6 +12,7 @@ namespace Clara\Foundation;
 
 use Clara\Events\Observable;
 use Clara\Events\Event;
+use Clara\Events\Observer\Logger;
 use Clara\Http\Request;
 use Clara\Http\Response;
 use Clara\Routing\Exception\RoutingException;
@@ -23,6 +24,11 @@ use Clara\Routing\Router;
  * @package Clara\Foundation
  */
 class Application extends Observable {
+
+	/**
+	 * @var bool
+	 */
+	protected $debugMode = false;
 
 	/**
 	 * @var \Clara\Routing\Router
@@ -40,10 +46,7 @@ class Application extends Observable {
 	public function __construct(ApplicationConfig $config) {
 		$this->config = $config;
 		$this->router = new Router();
-		try {
-			$this->router->importRoutesFromFile($this->config['routesFile']);
-			$this->fire(new Event('application.routes-loaded', $this, $this->config['routesFile']));
-		} catch(RoutingException $e) {}
+		$this->applyConfiguration();
 		$this->fire(new Event('application.created', $this));
 	}
 
@@ -64,6 +67,27 @@ class Application extends Observable {
 			$response->send();
 		}
 		$this->fire(new Event('application.run.complete', $this, $request));
+	}
+
+	/**
+	 * Applies loaded configuration values to the application
+	 *
+	 * @return $this
+	 */
+	private function applyConfiguration() {
+		if($this->debugMode = $this->config['debug']) {
+			$observer = new Logger($this->config['logsDir']);
+			$this->attach($observer);
+			$this->router->attach($observer);
+			$this->fire(new Event('application.debug-on', $this));
+		}
+
+		try {
+			$this->router->importRoutesFromFile($this->config['routesFile']);
+			$this->fire(new Event('application.routes-loaded', $this, $this->config['routesFile']));
+		} catch(RoutingException $e) {}
+
+		return $this;
 	}
 
 }
