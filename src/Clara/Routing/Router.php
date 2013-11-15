@@ -19,6 +19,7 @@ use Clara\Routing\Exception\RoutingException;
  * A Router that can route Requests
  *
  * EVENTS WITHIN:
+ *  router.route
  *  router.route.success
  *  router.route.failure
  *  router.addRoute
@@ -42,6 +43,7 @@ class Router extends Observable {
 	 * @uses \Clara\Routing\Route::matches
 	 */
 	public function route(Request $request) {
+		$this->fire(new Event('router.route', $this, $request));
 		if( empty($this->routes)) {
 			trigger_error('Router::route called with no routes loaded', E_USER_WARNING);
 		} else {
