@@ -154,6 +154,22 @@ class Uri {
 	}
 
 	/**
+	 * returns the equivalent of $_SERVER[REQUEST_URI]
+	 *
+	 * @return string
+	 */
+	public function getRequestUri() {
+		$final = '';
+		if($this->path) {
+			$final .= $this->path;
+		}
+		if($this->query) {
+			$final .= '?' . $this->query;
+		}
+		return $final;
+	}
+
+	/**
 	 * @link http://tools.ietf.org/html/rfc3986#section-5.3
 	 * @return string
 	 */

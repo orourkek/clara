@@ -23,15 +23,15 @@ class UriTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Http\Uri::parse
-	 * @covers Clara\Http\Uri::getScheme
-	 * @covers Clara\Http\Uri::getUser
-	 * @covers Clara\Http\Uri::getPass
-	 * @covers Clara\Http\Uri::getHost
-	 * @covers Clara\Http\Uri::getPort
-	 * @covers Clara\Http\Uri::getPath
-	 * @covers Clara\Http\Uri::getQuery
-	 * @covers Clara\Http\Uri::getFragment
+	 * @covers \Clara\Http\Uri::parse
+	 * @covers \Clara\Http\Uri::getScheme
+	 * @covers \Clara\Http\Uri::getUser
+	 * @covers \Clara\Http\Uri::getPass
+	 * @covers \Clara\Http\Uri::getHost
+	 * @covers \Clara\Http\Uri::getPort
+	 * @covers \Clara\Http\Uri::getPath
+	 * @covers \Clara\Http\Uri::getQuery
+	 * @covers \Clara\Http\Uri::getFragment
 	 * @dataProvider provideValidUris
 	 */
 	public function testCreate($uriString, $scheme, $user, $pass, $host, $port, $path, $query, $fragment) {
@@ -57,7 +57,7 @@ class UriTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Http\Uri::__toString
+	 * @covers \Clara\Http\Uri::__toString
 	 * @dataProvider provideValidUris
 	 */
 	public function testToString($uriString) {
@@ -84,7 +84,7 @@ class UriTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Http\Uri::startsWith
+	 * @covers \Clara\Http\Uri::startsWith
 	 */
 	public function testStartsWith() {
 		$uri = new Uri('http://example.com/foo/bar');
@@ -101,7 +101,7 @@ class UriTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Http\Uri::endsWith
+	 * @covers \Clara\Http\Uri::endsWith
 	 * @depends testStartsWith
 	 */
 	public function testEndsWith($uri) {
@@ -116,7 +116,7 @@ class UriTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Clara\Http\Uri::contains
+	 * @covers \Clara\Http\Uri::contains
 	 * @depends testEndsWith
 	 */
 	public function testContains($uri) {
@@ -130,6 +130,14 @@ class UriTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($uri->contains('https://'));
 		$this->assertFalse($uri->contains(null));
 		$this->assertFalse($uri->contains(false));
+	}
+
+	/**
+	 * @covers \Clara\Http\Uri::getRequestUri
+	 */
+	public function testGetRequestUri() {
+		$uri = new Uri('http://google.com/foo/bar?query1=baz#taz');
+		$this->assertSame('/foo/bar?query1=baz', $uri->getRequestUri());
 	}
 
 }
