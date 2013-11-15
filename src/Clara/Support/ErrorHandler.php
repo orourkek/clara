@@ -8,7 +8,7 @@
  * @package     Clara\Support
  */
 
-namespace Clara\Exception;
+namespace Clara\Support;
 
 use Exception;
 

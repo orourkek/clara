@@ -10,7 +10,6 @@
 
 namespace Clara\Support;
 
-use Clara\Exception\ErrorHandler;
 use Clara\Logging\Writer;
 use Exception;
 
