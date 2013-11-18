@@ -18,6 +18,7 @@ use Clara\Http\Response;
 use Clara\Routing\Exception\RoutingException;
 use Clara\Routing\Router;
 use Clara\Support\ErrorLogger;
+use Exception;
 
 /**
  * Class Application
@@ -65,7 +66,7 @@ class Application extends Observable {
 			$response->send();
 		} else {
 			$this->fire(new Event('application.run.not-found', $this));
-			$this->failGracefully('404 Not Found', 'The requested URL was not found on this server');
+			$this->failGracefully('404 Not Found', 'The requested URL was not found on this server', Response::HTTP_NOT_FOUND);
 		}
 		$this->fire(new Event('application.run.complete', $this, $request));
 	}
@@ -84,8 +85,9 @@ class Application extends Observable {
 	/**
 	 * @param string $title
 	 * @param string $message
+	 * @param int    $httpStatusCode
 	 */
-	protected function failGracefully($title, $message='') {
+	protected function failGracefully($title, $message='', $httpStatusCode=500) {
 		$this->fire(new Event('application.graceful-failure', $this));
 		$html = sprintf('<!doctype HTML>
 			<html>
@@ -96,15 +98,16 @@ class Application extends Observable {
 				<style>
 					* { font-family: "Helvetica Nueue", Helvetica, arial, sans-serif; color: #444; }
 					html { background: #eee; }
-					main, div { max-width: 400px; margin: auto; }
-					div {
+					main { max-width: 400px; margin: auto; }
+					div.clara-error-message {
+						width: 100%;
+						margin: 50px auto 0;
 						-webkit-box-shadow: 0px 2px 6px rgba(50, 50, 50, 0.1);
 						-moz-box-shadow: 0px 2px 6px rgba(50, 50, 50, 0.1);
 						box-shadow: 0px 2px 6px rgba(50, 50, 50, 0.1);
 						padding: 24px;
 						background: #fff;
 						border: 1px solid #ccc;
-						margin-top: 50px;
 						text-align: center;
 					}
 					h1 { font-size: 24px; font-weight: bold; }
@@ -114,7 +117,7 @@ class Application extends Observable {
 			<body>
 				<header></header>
 				<main>
-					<div>
+					<div class="clara-error-message">
 						<h1>%s</h1>
 						<h2>%s</h2>
 					</div>
@@ -122,7 +125,11 @@ class Application extends Observable {
 				<footer></footer>
 			</body>
 			</html>', $title, $message);
-		$response = new Response($html, Response::HTTP_INTERNAL_SERVER_ERROR);
+		try {
+			$response = new Response($html, $httpStatusCode);
+		} catch(Exception $e) {
+			$response = new Response($html, Response::HTTP_INTERNAL_SERVER_ERROR);
+		}
 		$response->send();
 		exit;
 	}
