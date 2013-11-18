@@ -65,8 +65,7 @@ class Application extends Observable {
 			$response->send();
 		} else {
 			$this->fire(new Event('application.run.not-found', $this));
-			$response = new Response('404 Not Found', Response::HTTP_NOT_FOUND);
-			$response->send();
+			$this->failGracefully('404 Not Found', 'The requested URL was not found on this server');
 		}
 		$this->fire(new Event('application.run.complete', $this, $request));
 	}
@@ -80,6 +79,52 @@ class Application extends Observable {
 		$handler = new ErrorLogger($this->config['logsDir']);
 		$handler->register();
 		return $this;
+	}
+
+	/**
+	 * @param string $title
+	 * @param string $message
+	 */
+	protected function failGracefully($title, $message='') {
+		$this->fire(new Event('application.graceful-failure', $this));
+		$html = sprintf('<!doctype HTML>
+			<html>
+			<head>
+				<meta charset="utf-8">
+				<meta content="initial-scale=1, minimum-scale=1, width=device-width" name="viewport">
+				<title>Oops! Something went wrong...</title>
+				<style>
+					* { font-family: "Helvetica Nueue", Helvetica, arial, sans-serif; color: #444; }
+					html { background: #eee; }
+					main, div { max-width: 400px; margin: auto; }
+					div {
+						-webkit-box-shadow: 0px 2px 6px rgba(50, 50, 50, 0.1);
+						-moz-box-shadow: 0px 2px 6px rgba(50, 50, 50, 0.1);
+						box-shadow: 0px 2px 6px rgba(50, 50, 50, 0.1);
+						padding: 24px;
+						background: #fff;
+						border: 1px solid #ccc;
+						margin-top: 50px;
+						text-align: center;
+					}
+					h1 { font-size: 24px; font-weight: bold; }
+					h2 { font-size: 12px; font-weight: normal; color: #888; }
+				</style>
+			</head>
+			<body>
+				<header></header>
+				<main>
+					<div>
+						<h1>%s</h1>
+						<h2>%s</h2>
+					</div>
+				</main>
+				<footer></footer>
+			</body>
+			</html>', $title, $message);
+		$response = new Response($html, Response::HTTP_INTERNAL_SERVER_ERROR);
+		$response->send();
+		exit;
 	}
 
 	/**
