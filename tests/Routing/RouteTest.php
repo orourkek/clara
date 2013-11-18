@@ -134,7 +134,7 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 		$handler = function(){};
 
 		$route = Route::get($pattern, $handler);
-		$this->assertAttributeSame('#^/foo/bar$#i', 'regex', $route);
+		$this->assertAttributeSame('#^/foo/bar/?$#i', 'regex', $route);
 	}
 
 	/**
@@ -149,8 +149,8 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 		$request->setUri('/foo/bar/baz/taz');
 
 		$route = Route::get($pattern, $handler);
-		$this->assertAttributeSame('#^/foo/bar/(?P<variable1>.+)/(?P<variable2>.+)$#i', 'regex', $route);
-		$this->assertSame('#^/foo/bar/(?P<variable1>.+)/(?P<variable2>.+)$#i', $route->getRegex());
+		$this->assertAttributeSame('#^/foo/bar/(?P<variable1>[^/]+)/(?P<variable2>[^/]+)/?$#i', 'regex', $route);
+		$this->assertSame('#^/foo/bar/(?P<variable1>[^/]+)/(?P<variable2>[^/]+)/?$#i', $route->getRegex());
 		$this->assertTrue($route->matches($request));
 		//matches() should also pull the variable values from the uri:
 		$this->assertSame(array('variable1' => 'baz', 'variable2' => 'taz'), $route->getParameters());
@@ -182,8 +182,10 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	public function provideRoutesForMatchingTests() {
 		return array(
 			array('GET', '/foo/bar', true),
+			array('GET', '/foo/bar/', true),
 			array('GET', '/foo/123', true),
-			array('GET', '/foo/bar/123', true),
+			array('GET', '/foo/123/', true),
+			array('GET', '/foo/bar/123', false),
 			array('GET', '/foobar', false),
 			array('GET', '/foo', false),
 			array('GET', '/bar', false),
@@ -207,11 +209,10 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @test
 	 * @covers \Clara\Routing\Route::matches
 	 * @covers \Clara\Routing\Route::compileRegex
 	 */
-	public function partialPatternMatchesShouldNotBeMatched() {
+	public function testPartialPatternMatchWillNotMatch() {
 		$request = new Request();
 		$request->setUri('/foo/bar')->setMethod('GET');
 		$route = Route::get('/foo/bar/{var}', function(){});
@@ -228,6 +229,20 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($route->matches($request));
 		$request->setMethod('POST');
 		$this->assertTrue($route->matches($request));
+	}
+
+	/**
+	 * @covers \Clara\Routing\Route::matches
+	 */
+	public function testMatchingWithVariousTrailingSlashes() {
+		$route = new Route('GET', '/foo/bar', function(){});
+		$request = new Request();
+		$request->setUri('/foo/bar')->setMethod('GET');
+		$this->assertTrue($route->matches($request));
+		$request->setUri('/foo/bar/');
+		$this->assertTrue($route->matches($request));
+		$request->setUri('/foo/bar////');
+		$this->assertFalse($route->matches($request));
 	}
 
 	/**

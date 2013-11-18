@@ -139,8 +139,8 @@ class Route {
 			$e->setRelevantRoute($this);
 			throw $e;
 		}
-		$this->pattern = $pattern;
-		$this->regex = $this->compileRegex($pattern);
+		$this->pattern = rtrim($pattern, '/');
+		$this->regex = $this->compileRegex();
 		return $this;
 	}
 
@@ -259,11 +259,11 @@ class Route {
 	/**
 	 * Compiles the pattern into a regular expression
 	 *
-	 * @param $pattern
 	 * @return string
 	 * @throws \Clara\Routing\Exception\RoutingException
 	 */
-	protected final function compileRegex($pattern) {
+	protected final function compileRegex() {
+		$pattern = $this->pattern;
 		//check if there are any variables in the pattern
 		if(preg_match_all('#{([a-zA-Z0-9]+)}#', $pattern, $matches, PREG_SET_ORDER)) {
 			$paramsToBeReplaced = array();
@@ -280,11 +280,11 @@ class Route {
 
 		if( ! empty($paramsToBeReplaced)) {
 			foreach($paramsToBeReplaced as $varName) {
-				$pattern = str_replace('{' . $varName . '}', '(?P<' . $varName . '>.+)', $pattern);
+				$pattern = str_replace('{' . $varName . '}', '(?P<' . $varName . '>[^/]+)', $pattern);
 			}
 		}
 
-		return sprintf('#^%s$#i', $pattern);
+		return sprintf('#^%s/?$#i', $pattern);
 	}
 
 	/**
