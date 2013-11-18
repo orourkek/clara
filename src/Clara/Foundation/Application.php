@@ -100,7 +100,7 @@ class Application extends Observable {
 					html { background: #eee; }
 					main { max-width: 400px; margin: auto; }
 					div.clara-error-message {
-						width: 100%;
+						max-width: 400px;
 						margin: 50px auto 0;
 						-webkit-box-shadow: 0px 2px 6px rgba(50, 50, 50, 0.1);
 						-moz-box-shadow: 0px 2px 6px rgba(50, 50, 50, 0.1);
