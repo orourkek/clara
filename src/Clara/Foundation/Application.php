@@ -89,10 +89,12 @@ class Application extends Observable {
 			$this->fire(new Event('application.run.routed', $this, $matchedRoute));
 			$response = $matchedRoute->run();
 			$this->fire(new Event('application.run.response', $this, $response));
-			//todo: if route->run() doesnt return a Response, this next line doesn't make sense
-			$response->send();
+			if($response instanceof Response) {
+				$response->send();
+			}
 		} else {
 			$this->fire(new Event('application.run.not-found', $this));
+			$this->logger->notice(sprintf('404 Not Found: %s', $request->getUri()));
 			$this->failGracefully(
 				'404 Not Found',
 				sprintf('The requested URL %s was not found on this server', $request->getUri()->getRequestUri()),
