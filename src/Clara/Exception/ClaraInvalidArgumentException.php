@@ -13,7 +13,10 @@ namespace Clara\Exception;
 use Exception;
 use InvalidArgumentException;
 
-
+/**
+ * @package Clara\Exception
+ * @codeCoverageIgnore
+ */
 class ClaraInvalidArgumentException extends InvalidArgumentException {
 
 	/**

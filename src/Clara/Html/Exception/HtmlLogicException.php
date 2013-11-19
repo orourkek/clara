@@ -12,7 +12,10 @@ namespace Clara\Html\Exception;
 
 use Clara\Exception\ClaraLogicException;
 
-
+/**
+ * @package Clara\Html\Exception
+ * @codeCoverageIgnore
+ */
 class HtmlLogicException extends ClaraLogicException {
 
 } 

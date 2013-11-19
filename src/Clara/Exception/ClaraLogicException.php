@@ -13,7 +13,10 @@ namespace Clara\Exception;
 use Exception;
 use LogicException;
 
-
+/**
+ * @package Clara\Exception
+ * @codeCoverageIgnore
+ */
 class ClaraLogicException extends LogicException {
 
 	/**

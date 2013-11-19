@@ -12,11 +12,9 @@ namespace Clara\Routing\Exception;
 
 use Clara\Exception\ClaraException;
 
-
 /**
- * Class RoutingException
- *
  * @package Clara\Routing\Exception
+ * @codeCoverageIgnore
  */
 class RoutingException extends ClaraException {
 

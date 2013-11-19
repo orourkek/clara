@@ -12,11 +12,9 @@ namespace Clara\Exception;
 
 use \Exception;
 
-
 /**
- * Class ClaraException
- *
  * @package Clara\Exception
+ * @codeCoverageIgnore
  */
 class ClaraException extends Exception {
 

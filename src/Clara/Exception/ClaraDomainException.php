@@ -13,7 +13,10 @@ namespace Clara\Exception;
 use Exception;
 use DomainException;
 
-
+/**
+ * @package Clara\Exception
+ * @codeCoverageIgnore
+ */
 class ClaraDomainException extends DomainException {
 
 	/**

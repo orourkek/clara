@@ -15,9 +15,8 @@ use Exception;
 
 
 /**
- * Class ClaraRuntimeException
- *
  * @package Clara\Exception
+ * @codeCoverageIgnore
  */
 class ClaraRuntimeException extends RuntimeException {
 

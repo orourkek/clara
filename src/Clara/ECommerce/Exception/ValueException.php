@@ -10,7 +10,10 @@
 
 namespace Clara\ECommerce\Exception;
 
-
+/**
+ * @package Clara\ECommerce\Exception
+ * @codeCoverageIgnore
+ */
 class ValueException extends ECommerceException {
 
 }

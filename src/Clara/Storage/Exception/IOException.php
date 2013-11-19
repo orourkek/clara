@@ -10,9 +10,12 @@
 
 namespace Clara\Storage\Exception;
 
-
 use Clara\Exception\ClaraException;
 
+/**
+ * @package Clara\Storage\Exception
+ * @codeCoverageIgnore
+ */
 class IOException extends ClaraException {
 
 } 

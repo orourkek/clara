@@ -12,7 +12,10 @@ namespace Clara\Database\Exception;
 
 use Clara\Exception\ClaraRuntimeException;
 
-
+/**
+ * @package Clara\Database\Exception
+ * @codeCoverageIgnore
+ */
 class DatabaseException extends ClaraRuntimeException {
 
 	/**
@@ -22,6 +25,7 @@ class DatabaseException extends ClaraRuntimeException {
 
 	/**
 	 * @param string $relevantQuery
+	 * @return $this
 	 */
 	public function setRelevantQuery($relevantQuery) {
 		$this->relevantQuery = $relevantQuery;
