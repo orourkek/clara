@@ -199,9 +199,13 @@ class Application extends Observable {
 	 * @param string $title
 	 * @param string $message
 	 * @param int    $httpStatusCode
+	 * @param string $errorCode
 	 */
-	protected function failGracefully($title, $message='', $httpStatusCode=500) {
-		$this->fire(new Event('application.graceful-failure', $this));
+	protected function failGracefully($title, $message='', $httpStatusCode=500, $errorCode='') {
+		$this->fire(new Event('application.graceful-failure', $this, $title));
+		if(empty($errorCode)) {
+			$errorCode = $this->getErrorName($httpStatusCode);
+		}
 		$html = sprintf('<!doctype HTML>
 			<html>
 			<head>
@@ -211,10 +215,10 @@ class Application extends Observable {
 				<style>
 					* { font-family: "Helvetica Nueue", Helvetica, arial, sans-serif; color: #444; }
 					html { background: #eee; }
-					main { max-width: 400px; margin: auto; }
+					main { max-width: 600px; margin: auto; }
 					div.clara-error-message {
-						max-width: 400px;
-						margin: 50px auto 0;
+						max-width: 600px;
+						margin: 50px auto 25px;
 						-webkit-box-shadow: 0px 2px 6px rgba(50, 50, 50, 0.1);
 						-moz-box-shadow: 0px 2px 6px rgba(50, 50, 50, 0.1);
 						box-shadow: 0px 2px 6px rgba(50, 50, 50, 0.1);
@@ -225,6 +229,7 @@ class Application extends Observable {
 					}
 					h1 { font-size: 24px; font-weight: bold; }
 					h2 { font-size: 12px; font-weight: normal; color: #888; }
+					span { font-style: italic; text-align: center; color: #888; }
 				</style>
 			</head>
 			<body>
@@ -233,11 +238,12 @@ class Application extends Observable {
 					<div class="clara-error-message">
 						<h1>%s</h1>
 						<h2>%s</h2>
+						<span>Error code: %s</span>
 					</div>
 				</main>
 				<footer></footer>
 			</body>
-			</html>', $title, $message);
+			</html>', $title, $message, $errorCode);
 		try {
 			$response = new Response($html, $httpStatusCode);
 		} catch(Exception $e) {
