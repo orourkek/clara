@@ -46,8 +46,7 @@ abstract class AbstractLogger extends Observable {
 	 * @param string $message
 	 * @return null
 	 */
-	public function emergency($message)
-	{
+	public function emergency($message) {
 		$this->fire(new Event(sprintf('log.%s', LogLevel::EMERGENCY), $this, $message));
 		$this->log(LogLevel::EMERGENCY, $message);
 	}
@@ -61,8 +60,7 @@ abstract class AbstractLogger extends Observable {
 	 * @param string $message
 	 * @return null
 	 */
-	public function alert($message)
-	{
+	public function alert($message) {
 		$this->fire(new Event(sprintf('log.%s', LogLevel::ALERT), $this, $message));
 		$this->log(LogLevel::ALERT, $message);
 	}
@@ -75,8 +73,7 @@ abstract class AbstractLogger extends Observable {
 	 * @param string $message
 	 * @return null
 	 */
-	public function critical($message)
-	{
+	public function critical($message) {
 		$this->fire(new Event(sprintf('log.%s', LogLevel::CRITICAL), $this, $message));
 		$this->log(LogLevel::CRITICAL, $message);
 	}
@@ -88,8 +85,7 @@ abstract class AbstractLogger extends Observable {
 	 * @param string $message
 	 * @return null
 	 */
-	public function error($message)
-	{
+	public function error($message) {
 		$this->fire(new Event(sprintf('log.%s', LogLevel::ERROR), $this, $message));
 		$this->log(LogLevel::ERROR, $message);
 	}
@@ -103,8 +99,7 @@ abstract class AbstractLogger extends Observable {
 	 * @param string $message
 	 * @return null
 	 */
-	public function warning($message)
-	{
+	public function warning($message) {
 		$this->fire(new Event(sprintf('log.%s', LogLevel::WARNING), $this, $message));
 		$this->log(LogLevel::WARNING, $message);
 	}
@@ -115,8 +110,7 @@ abstract class AbstractLogger extends Observable {
 	 * @param string $message
 	 * @return null
 	 */
-	public function notice($message)
-	{
+	public function notice($message) {
 		$this->fire(new Event(sprintf('log.%s', LogLevel::NOTICE), $this, $message));
 		$this->log(LogLevel::NOTICE, $message);
 	}
@@ -129,8 +123,7 @@ abstract class AbstractLogger extends Observable {
 	 * @param string $message
 	 * @return null
 	 */
-	public function info($message)
-	{
+	public function info($message) {
 		$this->fire(new Event(sprintf('log.%s', LogLevel::INFO), $this, $message));
 		$this->log(LogLevel::INFO, $message);
 	}
@@ -141,8 +134,7 @@ abstract class AbstractLogger extends Observable {
 	 * @param string $message
 	 * @return null
 	 */
-	public function debug($message)
-	{
+	public function debug($message) {
 		$this->fire(new Event(sprintf('log.%s', LogLevel::DEBUG), $this, $message));
 		$this->log(LogLevel::DEBUG, $message);
 	}
