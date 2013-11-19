@@ -188,7 +188,7 @@ class Application extends Observable {
 	 * Catches fatal errors and makes sure the event is logged, and a proper (user-friendly) response is shown
 	 */
 	public function handleShutdown() {
-		if ($e = error_get_last()) {
+		if( ! headers_sent() && $e = error_get_last()) {
 			$this->handleError($e['type'], $e['message'], $e['file'], $e['line']);
 		}
 	}
