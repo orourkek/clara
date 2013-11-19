@@ -94,7 +94,8 @@ class Application extends Observable {
 			$this->failGracefully(
 				'404 Not Found',
 				sprintf('The requested URL %s was not found on this server', $request->getUri()->getRequestUri()),
-				Response::HTTP_NOT_FOUND
+				Response::HTTP_NOT_FOUND,
+				'HTTP_NOT_FOUND'
 			);
 		}
 		$this->fire(new Event('application.run.complete', $this, $request));
@@ -201,11 +202,8 @@ class Application extends Observable {
 	 * @param int    $httpStatusCode
 	 * @param string $errorCode
 	 */
-	protected function failGracefully($title, $message='', $httpStatusCode=500, $errorCode='') {
+	protected function failGracefully($title, $message='', $httpStatusCode=500, $errorCode='HTTP_INTERNAL_SERVER_ERROR') {
 		$this->fire(new Event('application.graceful-failure', $this, $title));
-		if(empty($errorCode)) {
-			$errorCode = $this->getErrorName($httpStatusCode);
-		}
 		$html = sprintf('<!doctype HTML>
 			<html>
 			<head>
@@ -228,8 +226,8 @@ class Application extends Observable {
 						text-align: center;
 					}
 					h1 { font-size: 24px; font-weight: bold; }
-					h2 { font-size: 12px; font-weight: normal; color: #888; }
-					span { font-style: italic; text-align: center; color: #888; }
+					h2 { font-size: 16px; font-weight: normal; color: #888; }
+					span { font-style: italic; font-size: 12px; text-align: center; color: #888; }
 				</style>
 			</head>
 			<body>
