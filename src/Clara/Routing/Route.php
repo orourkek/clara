@@ -95,7 +95,7 @@ class Route {
 	 */
 	public function setHandler($handler) {
 		if( ! is_callable($handler)) {
-			if(is_string($handler) && 1 === preg_match('#^(?P<className>[a-zA-Z]+)@(?P<methodName>[a-zA-Z]+)$#', $handler, $matches)) {
+			if(is_string($handler) && 1 === preg_match('#^(?P<className>[\\a-zA-Z]+)@(?P<methodName>[a-zA-Z]+)$#', $handler, $matches)) {
 				$handler = new ControllerHandler($matches['className'], $matches['methodName']);
 			} else {
 				throw new RoutingException('Route handler must be callable OR follow guidelines outlined within Clara\Routing\Route');

@@ -127,6 +127,19 @@ class RouteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * Tests the regex pattern for the "Class@method" scheme. If the regex failed we'd receive a RoutingException,
+	 * but we should get all the way into ControllerHandler where it will fail because the class doesn't exist.
+	 *
+	 * @covers \Clara\Routing\Route::setHandler
+	 * @expectedException \Clara\Exception\ClaraInvalidArgumentException
+	 * @expectedExceptionMessage ControllerHandler class not found: "\Namespaced\Handler\Foo"
+	 */
+	public function testNamespacedHandlerString() {
+		$route = Route::get('/', '\Namespaced\Handler\Foo@Bar');
+		$this->assertAttributeNotEmpty('handler', $route);
+	}
+
+	/**
 	 * @covers \Clara\Routing\Route::compileRegex
 	 */
 	public function testBasicRegexConstruction() {
