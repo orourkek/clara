@@ -38,9 +38,9 @@
 	<header></header>
 	<main>
 		<div class="clara-error-message">
-			<h1><?= $title ?></h1>
-			<h2><?= $message ?></h2>
-			<span>Error code: <?= $errorCode ?></span>
+			<h1><?php echo $title ?></h1>
+			<h2><?php echo $message ?></h2>
+			<span>Error code: <?php echo $errorCode ?></span>
 		</div>
 	</main>
 	<footer></footer>
