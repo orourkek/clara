@@ -43,6 +43,10 @@
 			<span>Error code: <?php echo $errorCode ?></span>
 		</div>
 	</main>
-	<footer></footer>
+	<footer>
+		<?php if( ! empty($debugInfo)): ?>
+			<?php Kint::dump($debugInfo) ?>
+		<?php endif ?>
+	</footer>
 </body>
 </html>

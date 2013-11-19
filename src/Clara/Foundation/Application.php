@@ -97,21 +97,22 @@ class Application extends Observable {
 				'404 Not Found',
 				sprintf('The requested URL %s was not found on this server', $request->getUri()->getRequestUri()),
 				Response::HTTP_NOT_FOUND,
-				'HTTP_NOT_FOUND'
+				'HTTP_NOT_FOUND',
+				$request
 			);
 		}
 		$this->fire(new Event('application.run.complete', $this, $request));
 	}
 
 	/**
-	 * @param $level
-	 * @param $message
-	 * @param $file
-	 * @param $line
-	 * @param $context
-	 * @return mixed
+	 * @param       $level
+	 * @param       $message
+	 * @param       $file
+	 * @param       $line
+	 * @param array $context
+	 * @return bool
 	 */
-	public function handleError($level, $message, $file, $line, $context) {
+	public function handleError($level, $message, $file, $line, $context=array()) {
 		$message = sprintf('[PHP:%s] %s in %s @%s', $this->getErrorName($level), $message, $file, $line);
 
 		switch ($level) {
@@ -142,7 +143,9 @@ class Application extends Observable {
 				$this->failGracefully(
 					'Oops! There was a problem serving the requested page.',
 					'We\'ve been notified of the problem and will work quickly to fix it!',
-					Response::HTTP_INTERNAL_SERVER_ERROR
+					Response::HTTP_INTERNAL_SERVER_ERROR,
+					'HTTP_INTERNAL_SERVER_ERROR',
+					compact('level', 'message', 'file', 'line')
 				);
 				break;
 
@@ -151,7 +154,9 @@ class Application extends Observable {
 				$this->failGracefully(
 					'Oops! There was a problem serving the requested page.',
 					'We\'ve been notified of the problem and will work quickly to fix it!',
-					Response::HTTP_INTERNAL_SERVER_ERROR
+					Response::HTTP_INTERNAL_SERVER_ERROR,
+					'HTTP_INTERNAL_SERVER_ERROR',
+					compact('level', 'message', 'file', 'line')
 				);
 				break;
 
@@ -173,18 +178,30 @@ class Application extends Observable {
 		$this->failGracefully(
 			'Oops! There was a problem serving the requested page.',
 			'We\'ve been notified of the problem and will work quickly to fix it!',
-			Response::HTTP_INTERNAL_SERVER_ERROR
+			Response::HTTP_INTERNAL_SERVER_ERROR,
+			'HTTP_INTERNAL_SERVER_ERROR',
+			$exception
 		);
 	}
 
 	/**
-	 * Registers a handler for errors and exceptions
+	 * Catches fatal errors and makes sure the event is logged, and a proper (user-friendly) response is shown
+	 */
+	public function handleShutdown() {
+		if ($e = error_get_last()) {
+			$this->handleError($e['type'], $e['message'], $e['file'], $e['line']);
+		}
+	}
+
+	/**
+	 * Registers a handler for errors, exceptions, and shutdowns (fatal errors)
 	 *
 	 * @return $this
 	 */
 	protected function registerErrorHandlers() {
 		set_error_handler(array($this, 'handleError'));
 		set_exception_handler(array($this, 'handleException'));
+		register_shutdown_function(array($this, 'handleShutdown'));
 		return $this;
 	}
 
@@ -203,13 +220,17 @@ class Application extends Observable {
 	 * @param string $message
 	 * @param int    $httpStatusCode
 	 * @param string $errorCode
+	 * @param null   $reason
 	 */
-	protected function failGracefully($title, $message='', $httpStatusCode=500, $errorCode='HTTP_INTERNAL_SERVER_ERROR') {
+	protected function failGracefully($title, $message='', $httpStatusCode=500, $errorCode='HTTP_INTERNAL_SERVER_ERROR', $reason=null) {
 		//todo: make this event more verbose about what happened
 		$this->fire(new Event('application.graceful-failure', $this, $title));
 		$composer = new HtmlComposer();
 		$composer->withTemplate(dirname(__DIR__) . '/View/templates/application-failure.php');
 		$composer->with(compact('title', 'message', 'errorCode'));
+		if($this->debugMode) {
+			$composer->with('debugInfo', $reason);
+		}
 		try {
 			$composer->setStatusCode($httpStatusCode);
 		} catch(Exception $e) {
@@ -217,7 +238,7 @@ class Application extends Observable {
 		}
 		$response = $composer->compose();
 		$response->send();
-		exit;
+		exit(2);
 	}
 
 	/**
@@ -230,6 +251,7 @@ class Application extends Observable {
 			$observer = new Logger($this->config['logsDir'], true);
 			$this->attach($observer);
 			$this->router->attach($observer);
+			require CLARA_LIB_DIR . '/kint/Kint.class.php';
 			$this->fire(new Event('application.debug-on', $this));
 		}
 
