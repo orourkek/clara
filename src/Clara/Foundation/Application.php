@@ -73,7 +73,7 @@ class Application extends Observable {
 	public function __construct(ApplicationConfig $config) {
 		$this->config = $config;
 		$this->registerErrorHandlers();
-		$this->router = new Router();
+		$this->router = $this->makeRouter();
 		$this->logger = new Writer($this->config['logsDir']);
 		$this->applyConfiguration();
 		$this->fire(new Event('application.created', $this));
@@ -205,6 +205,15 @@ class Application extends Observable {
 		set_exception_handler(array($this, 'handleException'));
 		register_shutdown_function(array($this, 'handleShutdown'));
 		return $this;
+	}
+
+	/**
+	 * Creates a Router object
+	 *
+	 * @return \Clara\Routing\Router
+	 */
+	protected function makeRouter() {
+		return new Router();
 	}
 
 	/**
