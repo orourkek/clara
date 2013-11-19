@@ -15,6 +15,7 @@ use Clara\Events\Event;
 use Clara\Events\Observer\Logger;
 use Clara\Http\Request;
 use Clara\Http\Response;
+use Clara\Logging\Writer;
 use Clara\Routing\Exception\RoutingException;
 use Clara\Routing\Router;
 use Clara\Support\ErrorLogger;
@@ -43,12 +44,36 @@ class Application extends Observable {
 	protected $config;
 
 	/**
+	 * @var \Clara\Logging\Writer
+	 */
+	protected $logger;
+
+	/**
+	 * @var array
+	 */
+	protected $errorLevels = array(
+		E_ALL				=> 'E_ALL',
+		E_USER_NOTICE		=> 'E_USER_NOTICE',
+		E_USER_WARNING		=> 'E_USER_WARNING',
+		E_USER_ERROR		=> 'E_USER_ERROR',
+		E_COMPILE_WARNING	=> 'E_COMPILE_WARNING',
+		E_COMPILE_ERROR		=> 'E_COMPILE_ERROR',
+		E_CORE_WARNING		=> 'E_CORE_WARNING',
+		E_CORE_ERROR		=> 'E_CORE_ERROR',
+		E_NOTICE			=> 'E_NOTICE',
+		E_PARSE				=> 'E_PARSE',
+		E_WARNING			=> 'E_WARNING',
+		E_ERROR				=> 'E_ERROR',
+	);
+
+	/**
 	 * @param \Clara\Foundation\ApplicationConfig $config
 	 */
 	public function __construct(ApplicationConfig $config) {
 		$this->config = $config;
-		$this->registerErrorHandler();
+		$this->registerErrorHandlers();
 		$this->router = new Router();
+		$this->logger = new Writer($this->config['logsDir']);
 		$this->applyConfiguration();
 		$this->fire(new Event('application.created', $this));
 	}
@@ -66,9 +91,87 @@ class Application extends Observable {
 			$response->send();
 		} else {
 			$this->fire(new Event('application.run.not-found', $this));
-			$this->failGracefully('404 Not Found', 'The requested URL was not found on this server', Response::HTTP_NOT_FOUND);
+			$this->failGracefully(
+				'404 Not Found',
+				sprintf('The requested URL %s was not found on this server', $request->getUri()->getRequestUri()),
+				Response::HTTP_NOT_FOUND
+			);
 		}
 		$this->fire(new Event('application.run.complete', $this, $request));
+	}
+
+	/**
+	 * @param $level
+	 * @param $message
+	 * @param $file
+	 * @param $line
+	 * @param $context
+	 * @return mixed
+	 */
+	public function handleError($level, $message, $file, $line, $context) {
+		$message = sprintf('[PHP:%s] %s in %s @%s', $this->getErrorName($level), $message, $file, $line);
+
+		switch ($level) {
+			case E_USER_ERROR:
+			case E_USER_WARNING:
+			case E_USER_NOTICE:
+			case E_USER_DEPRECATED:
+			case E_PARSE:
+				$this->logger->info($message);
+				break;
+
+			case E_NOTICE:
+				//ignore notices
+				break;
+
+			case E_DEPRECATED:
+				$this->logger->notice($message);
+				break;
+
+			case E_WARNING:
+			case E_CORE_WARNING:
+			case E_COMPILE_WARNING:
+				$this->logger->warning($message);
+				break;
+
+			case E_ERROR:
+				$this->logger->error($message);
+				$this->failGracefully(
+					'Oops! There was a problem serving the requested page.',
+					'We\'ve been notified of the problem and will work quickly to fix it!',
+					Response::HTTP_INTERNAL_SERVER_ERROR
+				);
+				break;
+
+			case E_CORE_ERROR:
+				$this->logger->alert($message);
+				$this->failGracefully(
+					'Oops! There was a problem serving the requested page.',
+					'We\'ve been notified of the problem and will work quickly to fix it!',
+					Response::HTTP_INTERNAL_SERVER_ERROR
+				);
+				break;
+
+			default:
+				$this->logger->debug($message);
+				break;
+		}
+		return true;
+	}
+
+	/**
+	 * @param \Exception $exception
+	 * @return mixed
+	 */
+	public function handleException(Exception $exception) {
+		ob_start();
+		var_dump($exception);
+		$this->logger->critical(sprintf('Exception Encountered:%s%s', PHP_EOL, ob_get_clean()));
+		$this->failGracefully(
+			'Oops! There was a problem serving the requested page.',
+			'We\'ve been notified of the problem and will work quickly to fix it!',
+			Response::HTTP_INTERNAL_SERVER_ERROR
+		);
 	}
 
 	/**
@@ -76,10 +179,20 @@ class Application extends Observable {
 	 *
 	 * @return $this
 	 */
-	protected function registerErrorHandler() {
-		$handler = new ErrorLogger($this->config['logsDir']);
-		$handler->register();
+	protected function registerErrorHandlers() {
+		set_error_handler(array($this, 'handleError'));
+		set_exception_handler(array($this, 'handleException'));
 		return $this;
+	}
+
+	/**
+	 * Fetches a string to represent the supplied PHp error level
+	 *
+	 * @param $code
+	 * @return string
+	 */
+	protected function getErrorName($code) {
+		return array_key_exists($code, $this->errorLevels)? $this->errorLevels[$code] : "UNKNOWN";
 	}
 
 	/**
