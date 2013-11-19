@@ -88,6 +88,7 @@ class Application extends Observable {
 			$this->fire(new Event('application.run.routed', $this, $matchedRoute));
 			$response = $matchedRoute->run();
 			$this->fire(new Event('application.run.response', $this, $response));
+			//todo: if route->run() doesnt return a Response, this next line doesn't make sense
 			$response->send();
 		} else {
 			$this->fire(new Event('application.run.not-found', $this));
