@@ -50,7 +50,7 @@ abstract class Connection extends Observable {
 	public function connect($dsn, $username, $password, $options) {
 		try {
 			$this->fire(new Event('db.connection.connect', $this, $dsn));
-			$this->pdo = new PDO('viervre', $username, $password, $options);
+			$this->pdo = new PDO($dsn, $username, $password, $options);
 		} catch(PDOException $e) {
 			$de = new DatabaseException('PDO Connection failed');
 			$de->setPrevious($e);
