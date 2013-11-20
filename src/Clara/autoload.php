@@ -8,8 +8,6 @@
  * @package     Clara
  */
 
-$foo = $thisShouldGenerateAWarningWithPhpStorm;
-
 spl_autoload_register(function($className) {
 	$className = ltrim($className, '\\');
 	$fileName  = '';
