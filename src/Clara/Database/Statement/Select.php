@@ -80,6 +80,10 @@ class Select extends Statement implements Stringable {
 	public function columns() {
 		$columns = func_get_args();
 		if( ! empty($columns)) {
+			if(1 === count($columns) && is_array($columns[0])) {
+				//an array was passed as the one and only parameter
+				$columns = $columns[0];
+			}
 			foreach($columns as $column) {
 				if(is_array($column) && count($column) > 1) {
 					$this->column($column[0], $column[1]);
