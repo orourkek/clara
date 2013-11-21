@@ -13,6 +13,7 @@ namespace Clara\Database;
 use Clara\Database\Exception\DatabaseException;
 use Clara\Events\Event;
 use Clara\Events\Observable;
+use Clara\Support\Contract\Stringable;
 use PDO;
 use PDOException;
 
@@ -66,9 +67,6 @@ abstract class Connection extends Observable {
 	 * @throws \Clara\Database\Exception\DatabaseException
 	 */
 	public function queryRow($query) {
-		if( ! is_string($query)) {
-			throw new DatabaseException(sprintf('Query MUST be a string, %s given', gettype($query)));
-		}
 		return $this->query($query, self::FETCH_ROW);
 	}
 
@@ -79,8 +77,10 @@ abstract class Connection extends Observable {
 	 * @throws \Clara\Database\Exception\DatabaseException
 	 */
 	public function query($query, $fetch=self::FETCH_ALL) {
-		if( ! is_string($query)) {
-			throw new DatabaseException(sprintf('Query MUST be a string, %s given', gettype($query)));
+		if($query instanceof Stringable) {
+			$query = (string) $query;
+		} else if( ! is_string($query)) {
+			throw new DatabaseException(sprintf('Query MUST be a string or implement Stringable, %s given', gettype($query)));
 		}
 		$this->fire(new Event('db.connection.query', $this, array('query'=>$query, 'mode'=>$fetch)));
 		$result = $this->pdo->query($query);
@@ -108,8 +108,10 @@ abstract class Connection extends Observable {
 	 * @throws \Clara\Database\Exception\DatabaseException
 	 */
 	public function exec($query) {
-		if( ! is_string($query)) {
-			throw new DatabaseException(sprintf('Query MUST be a string, %s given', gettype($query)));
+		if($query instanceof Stringable) {
+			$query = (string) $query;
+		} else if( ! is_string($query)) {
+			throw new DatabaseException(sprintf('Query MUST be a string or implement Stringable, %s given', gettype($query)));
 		}
 		$this->fire(new Event('db.connection.exec', $this, $query));
 		$count = $this->pdo->exec($query);
@@ -122,8 +124,10 @@ abstract class Connection extends Observable {
 	 * @throws \Clara\Database\Exception\DatabaseException
 	 */
 	public function prepare($query) {
-		if( ! is_string($query)) {
-			throw new DatabaseException(sprintf('Query MUST be a string, %s given', gettype($query)));
+		if($query instanceof Stringable) {
+			$query = (string) $query;
+		} else if( ! is_string($query)) {
+			throw new DatabaseException(sprintf('Query MUST be a string or implement Stringable, %s given', gettype($query)));
 		}
 		if($stmt = $this->pdo->prepare($query)) {
 			return $stmt;
