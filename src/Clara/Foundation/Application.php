@@ -266,8 +266,10 @@ class Application extends Observable {
 			$this->fire(new Event('application.debug-on', $this));
 		}
 
-		$this->router->importRoutesFromFile($this->config['routesFile']);
-		$this->fire(new Event('application.routes-loaded', $this, $this->config['routesFile']));
+		if('' !== $this->config['routesFile']) {
+			$this->router->importRoutesFromFile($this->config['routesFile']);
+			$this->fire(new Event('application.routes-loaded', $this, $this->config['routesFile']));
+		}
 
 		return $this;
 	}
