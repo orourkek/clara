@@ -1,7 +1,7 @@
 <?php
 
 /**
- * WhereClauseTest.php
+ * ConditionalExpressionTest.php
  *
  * This DocBlock was generated automatically by PhpStorm
  *
@@ -9,7 +9,7 @@
  * @package     Clara
  */
 
-use Clara\Database\Statement\WhereClause;
+use Clara\Database\Statement\ConditionalExpression;
 use Clara\Database\Statement\Identifier;
 use Clara\Database\Statement\Select;
 
@@ -38,10 +38,10 @@ class WhereClauseTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testSetTarget($target, $expectException) {
 		if($expectException) {
-			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', 'WhereClause target must be a valid identifier');
-			new WhereClause($target);
+			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', 'ConditionalExpression target must be a valid identifier');
+			new ConditionalExpression($target);
 		} else {
-			$cond = new WhereClause($target);
+			$cond = new ConditionalExpression($target);
 			$expected = Identifier::fromString($target);
 			$this->assertAttributeEquals($expected, 'target', $cond);
 		}
@@ -78,9 +78,9 @@ class WhereClauseTest extends PHPUnit_Framework_TestCase {
 	 * @dataProvider provideOperators
 	 */
 	public function testSetOperator($operator, $expectException) {
-		$cond = new WhereClause('foo');
+		$cond = new ConditionalExpression('foo');
 		if($expectException) {
-			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('Invalid WhereClause operator: "%s"', $operator));
+			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('Invalid ConditionalExpression operator: "%s"', $operator));
 			$cond->setOperator($operator);
 		} else {
 			$cond->setOperator($operator);
@@ -111,9 +111,9 @@ class WhereClauseTest extends PHPUnit_Framework_TestCase {
 	 * @dataProvider providePredicates
 	 */
 	public function testSetPredicate($predicate, $expectException, $expected='') {
-		$cond = new WhereClause('foo');
+		$cond = new ConditionalExpression('foo');
 		if($expectException) {
-			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('Invalid WhereClause predicate. Expecting string|int|Statement, received %s', gettype($predicate)));
+			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('Invalid ConditionalExpression predicate. Expecting string|int|Statement, received %s', gettype($predicate)));
 			$cond->setPredicate($predicate);
 		} else {
 			$cond->setPredicate($predicate);
@@ -137,9 +137,9 @@ class WhereClauseTest extends PHPUnit_Framework_TestCase {
 	 * @dataProvider providePreceders
 	 */
 	public function testSetPreceder($preceder, $expectException) {
-		$condition = new WhereClause('foo');
+		$condition = new ConditionalExpression('foo');
 		if($expectException) {
-			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('Invalid WhereClause preceder. Expecting AND|OR'));
+			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('Invalid ConditionalExpression preceder. Expecting AND|OR'));
 			$condition->setPreceder($preceder);
 		} else {
 			$condition->setPreceder($preceder);
@@ -151,11 +151,11 @@ class WhereClauseTest extends PHPUnit_Framework_TestCase {
 		$foo = new Select();
 		$foo->column('bar')->from('baz');
 		return array(
-			array(new WhereClause('foo', '=', '0'), "`foo` = '0'"),
-			array(new WhereClause('foo', 'like', "'bar'"), "`foo` LIKE 'bar'"),
-			array(new WhereClause('foo', 'in', $foo), "`foo` IN (SELECT `bar` FROM `baz`)"),
-			array(new WhereClause('foo.bar', '>=', '?'), "`foo`.`bar` >= ?"),
-			array(new WhereClause('foo.bar', '!=', ':baz'), "`foo`.`bar` != :baz"),
+			array(new ConditionalExpression('foo', '=', '0'), "`foo` = '0'"),
+			array(new ConditionalExpression('foo', 'like', "'bar'"), "`foo` LIKE 'bar'"),
+			array(new ConditionalExpression('foo', 'in', $foo), "`foo` IN (SELECT `bar` FROM `baz`)"),
+			array(new ConditionalExpression('foo.bar', '>=', '?'), "`foo`.`bar` >= ?"),
+			array(new ConditionalExpression('foo.bar', '!=', ':baz'), "`foo`.`bar` != :baz"),
 		);
 	}
 
@@ -170,9 +170,9 @@ class WhereClauseTest extends PHPUnit_Framework_TestCase {
 
 	public function provideStringsForTesting() {
 		return array(
-			array('foo.bar = baz.taz', new WhereClause('foo.bar', '=', 'baz.taz')),
-			array('foo <> 1', new WhereClause('foo', '<>', '1')),
-			array('foo <= ?', new WhereClause('foo', '<=', '?')),
+			array('foo.bar = baz.taz', new ConditionalExpression('foo.bar', '=', 'baz.taz')),
+			array('foo <> 1', new ConditionalExpression('foo', '<>', '1')),
+			array('foo <= ?', new ConditionalExpression('foo', '<=', '?')),
 			array('foo=1', false),
 			array('foo.bar= baz.taz', false),
 			array('', false),
@@ -190,10 +190,10 @@ class WhereClauseTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testFromString($str, $expected) {
 		if(false === $expected) {
-			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('WhereClause::fromString failed with input "%s"', $str));
-			WhereClause::fromString($str);
+			$this->setExpectedException('\Clara\Database\Statement\Exception\StatementException', sprintf('ConditionalExpression::fromString failed with input "%s"', $str));
+			ConditionalExpression::fromString($str);
 		} else {
-			$cond = WhereClause::fromString($str);
+			$cond = ConditionalExpression::fromString($str);
 			$this->assertEquals($expected, $cond);
 		}
 	}

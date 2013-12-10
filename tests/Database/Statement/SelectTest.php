@@ -10,7 +10,7 @@
 
 use Clara\Database\Statement\Select;
 use Clara\Database\Statement\Identifier;
-use Clara\Database\Statement\WhereClause;
+use Clara\Database\Statement\ConditionalExpression;
 use Clara\Database\Statement\OrderClause;
 
 class SelectTest extends PHPUnit_Framework_TestCase {
@@ -55,10 +55,10 @@ class SelectTest extends PHPUnit_Framework_TestCase {
 		$foo = new Select();
 		$foo->column('bar')->from('baz');
 		return array(
-			array(array('foo.bar', '=', '0'), new WhereClause('foo.bar', '=', 0)),
-			array(array('foo.bar', '<>', 'baz.taz'), new WhereClause('foo.bar', '<>', 'baz.taz')),
-			array(array('bar', 'IN', $foo), new WhereClause('bar', 'in', $foo)),
-			array(array('bar'), new WhereClause('bar')),
+			array(array('foo.bar', '=', '0'), new ConditionalExpression('foo.bar', '=', 0)),
+			array(array('foo.bar', '<>', 'baz.taz'), new ConditionalExpression('foo.bar', '<>', 'baz.taz')),
+			array(array('bar', 'IN', $foo), new ConditionalExpression('bar', 'in', $foo)),
+			array(array('bar'), new ConditionalExpression('bar')),
 			array(array('bar', 'baz', 'taz', 'zap'), false),
 		);
 	}

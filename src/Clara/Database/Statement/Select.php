@@ -31,7 +31,7 @@ class Select extends Statement implements Stringable {
 	protected $tables;
 
 	/**
-	 * @var \Clara\Database\Statement\WhereClause[]
+	 * @var \Clara\Database\Statement\ConditionalExpression[]
 	 */
 	protected $whereClauses = array();
 
@@ -39,6 +39,11 @@ class Select extends Statement implements Stringable {
 	 * @var \Clara\Database\Statement\OrderClause[]
 	 */
 	protected $orderClauses = array();
+
+	/**
+	 * @var \Clara\Database\Statement\JoinClause[]
+	 */
+	protected $joins = array();
 
 	/**
 	 * @var string
@@ -107,10 +112,10 @@ class Select extends Statement implements Stringable {
 		try {
 			switch(true) {
 				case (is_null($operator) && is_null($predicate)):
-					$condition = WhereClause::fromString($target);
+					$condition = ConditionalExpression::fromString($target);
 					break;
 				case ( ! is_null($operator) && ! is_null($predicate)):
-					$condition = new WhereClause($target, $operator, $predicate);
+					$condition = new ConditionalExpression($target, $operator, $predicate);
 					break;
 				default:
 					throw new StatementException(sprintf('Invalid call to %s - see docblock for detailed description', __METHOD__));
@@ -146,6 +151,57 @@ class Select extends Statement implements Stringable {
 	 */
 	public function andWhere($target, $operator=null, $predicate=null) {
 		return $this->where($target, $operator, $predicate, 'AND');
+	}
+
+	/**
+	 * @param string $target
+	 * @param string $type
+	 * @param null   $on
+	 * @return $this
+	 */
+	public function join($target, $type='INNER', $on=null) {
+		$join = new JoinClause($target, $type);
+		if($on) {
+			$join->on($on);
+		}
+		$this->joins[] = $join;
+		return $this;
+	}
+
+	/**
+	 * @param $target
+	 * @param $on
+	 * @return $this
+	 */
+	public function innerJoin($target, $on) {
+		return $this->join($target, 'INNER', $on);
+	}
+
+	/**
+	 * @param $target
+	 * @param $on
+	 * @return $this
+	 */
+	public function leftOuterJoin($target, $on) {
+		return $this->join($target, 'LEFT OUTER', $on);
+	}
+
+	/**
+	 * @param $target
+	 * @param $on
+	 * @return $this
+	 */
+	public function rightOuterJoin($target, $on) {
+		return $this->join($target, 'RIGHT OUTER', $on);
+	}
+
+	/**
+	 * @param $target
+	 * @param $on
+	 * @return $this
+	 */
+	public function fullOuterJoin($target, $on) {
+		return $this->join($target, 'FULL OUTER', $on);
 	}
 
 	/**
@@ -196,6 +252,10 @@ class Select extends Statement implements Stringable {
 		}
 		$str .= sprintf('FROM %s ', implode(', ', $this->tables));
 
+		//JOIN(S)
+		if( ! empty($this->joins)) {
+			$str .= sprintf('%s ', implode(' ', $this->joins));
+		}
 
 		//CONDITION(S)
 		if( ! empty($this->whereClauses)) {

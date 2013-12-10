@@ -1,6 +1,6 @@
 <?php
 /**
- * WhereClause.php
+ * ConditionalExpression.php
  *
  * This DocBlock was generated automatically by PhpStorm
  *
@@ -18,7 +18,7 @@ use Clara\Support\Contract\Stringable;
  *
  * @package Clara\Database\Statement
  */
-class WhereClause implements Stringable {
+class ConditionalExpression implements Stringable {
 
 	/**
 	 * List of operators that are able to be used
@@ -59,7 +59,7 @@ class WhereClause implements Stringable {
 	protected $target;
 
 	/**
-	 * The clause operator. See WhereClause::validOperators[] for a list of valid operators
+	 * The clause operator. See ConditionalExpression::validOperators[] for a list of valid operators
 	 *
 	 * @var string
 	 */
@@ -93,7 +93,7 @@ class WhereClause implements Stringable {
 	}
 
 	/**
-	 * Sets the clause operator. Must be in WhereClause::validOperators[]
+	 * Sets the clause operator. Must be in ConditionalExpression::validOperators[]
 	 *
 	 * @param string $operator
 	 * @throws \Clara\Database\Statement\Exception\StatementException
@@ -102,7 +102,7 @@ class WhereClause implements Stringable {
 	public function setOperator($operator) {
 		$operator = strtoupper(trim($operator));
 		if( ! in_array($operator, self::$validOperators)) {
-			throw new StatementException(sprintf('Invalid WhereClause operator: "%s"', $operator));
+			throw new StatementException(sprintf('Invalid ConditionalExpression operator: "%s"', $operator));
 		}
 		$this->operator = $operator;
 		return $this;
@@ -148,7 +148,7 @@ class WhereClause implements Stringable {
 		} else if($predicate instanceof Stringable) {
 			$this->predicate = (string) $predicate;
 		} else {
-			throw new StatementException(sprintf('Invalid WhereClause predicate. Expecting string|int|Statement, received %s', gettype($predicate)));
+			throw new StatementException(sprintf('Invalid ConditionalExpression predicate. Expecting string|int|Statement, received %s', gettype($predicate)));
 		}
 		return $this;
 	}
@@ -172,7 +172,7 @@ class WhereClause implements Stringable {
 	public function setPreceder($preceder) {
 		$preceder = strtoupper($preceder);
 		if( ! in_array($preceder, array('OR', 'AND'))) {
-			throw new StatementException(sprintf('Invalid WhereClause preceder. Expecting AND|OR'));
+			throw new StatementException(sprintf('Invalid ConditionalExpression preceder. Expecting AND|OR'));
 		}
 		$this->preceder = $preceder;
 		return $this;
@@ -198,7 +198,7 @@ class WhereClause implements Stringable {
 		try {
 			$this->target = Identifier::fromString($target);
 		} catch(StatementException $prev) {
-			$e = new StatementException('WhereClause target must be a valid identifier');
+			$e = new StatementException('ConditionalExpression target must be a valid identifier');
 			$e->setPrevious($prev);
 			throw $e;
 		}
@@ -222,10 +222,10 @@ class WhereClause implements Stringable {
 	}
 
 	/**
-	 * Attempts to construct a WhereClause object from a string
+	 * Attempts to construct a ConditionalExpression object from a string
 	 *
 	 * @param string $str
-	 * @return \Clara\Database\Statement\WhereClause
+	 * @return \Clara\Database\Statement\ConditionalExpression
 	 * @throws \Clara\Database\Statement\Exception\StatementException
 	 */
 	public static function fromString($str) {
@@ -233,14 +233,14 @@ class WhereClause implements Stringable {
 			try {
 				switch(count($pieces = explode(' ', $str))) {
 					case 1:
-						return new WhereClause($pieces[0]);
+						return new ConditionalExpression($pieces[0]);
 						break;
 					case 3:
-						return new WhereClause($pieces[0], $pieces[1], $pieces[2]);
+						return new ConditionalExpression($pieces[0], $pieces[1], $pieces[2]);
 						break;
 				}
 			} catch(\Exception $e) {}
 		}
-		throw new StatementException(sprintf('WhereClause::fromString failed with input "%s"', $str));
+		throw new StatementException(sprintf('ConditionalExpression::fromString failed with input "%s"', $str));
 	}
 } 
