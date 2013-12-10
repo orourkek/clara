@@ -27,6 +27,14 @@ class ControllerHandlerTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @covers \Clara\Routing\ControllerHandler::__construct
+	 * @expectedException \Clara\Exception\ClaraInvalidArgumentException
+	 */
+	public function testThatMethodMustExistInClassOtherwiseExceptionIsThrown() {
+		new ControllerHandler('FooBar', 'method');
+	}
+
+	/**
+	 * @covers \Clara\Routing\ControllerHandler::__construct
 	 */
 	public function testThatConstructorDoesWhatItIsSupposedTo() {
 		$ch = new ControllerHandler('FooBar', 'baz');

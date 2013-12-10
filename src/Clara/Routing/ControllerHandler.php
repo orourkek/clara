@@ -42,6 +42,9 @@ class ControllerHandler {
 		if( ! class_exists($clazz)) {
 			throw new ClaraInvalidArgumentException(sprintf('ControllerHandler class not found: "%s"', $clazz));
 		}
+		if( ! method_exists($clazz, $method)) {
+			throw new ClaraInvalidArgumentException(sprintf('ControllerHandler method not found: "%s::%s"', $clazz, $method));
+		}
 		$this->clazz = $clazz;
 		$this->method = $method;
 	}
