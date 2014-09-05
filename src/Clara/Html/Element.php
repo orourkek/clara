@@ -106,6 +106,33 @@ abstract class Element implements Stringable {
 	}
 
 	/**
+	 * Appends a value to the given attribute
+	 *
+	 * @param string $attribute
+	 * @param mixed  $value
+	 * @return $this
+	 * @throws \Clara\Exception\ClaraDomainException
+	 */
+	public function appendAttribute($attribute, $value) {
+		if( ! $this->isValidAttribute($attribute)) {
+			throw new ClaraDomainException(sprintf('Invalid HTML element attribute "%s"', $attribute));
+		}
+		if( ! $this->hasAttribute($attribute)) {
+			return $this->addAttribute($attribute, $value);
+		}
+		$this->attributes[$attribute]->append($value);
+		return $this;
+	}
+
+	/**
+	 * @param $attribute
+	 * @return bool
+	 */
+	public function hasAttribute($attribute) {
+		return array_key_exists($attribute, $this->attributes);
+	}
+
+	/**
 	 * @param string|\Clara\Html\Element $content
 	 * @return $this
 	 * @throws \Clara\Exception\ClaraDomainException

@@ -43,6 +43,15 @@ class Attribute implements Stringable {
 	}
 
 	/**
+	 * @param $value
+	 * @return Attribute
+	 */
+	public function append($value) {
+		$this->value .= $value;
+		return $this;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function __toString() {
