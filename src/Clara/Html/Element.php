@@ -110,14 +110,14 @@ abstract class Element implements Stringable {
 	 *
 	 * @param string $attribute
 	 * @param mixed  $value
+	 * @param bool   $overwrite
 	 * @return $this
-	 * @throws \Clara\Exception\ClaraDomainException
 	 */
-	public function appendAttribute($attribute, $value) {
+	public function appendAttribute($attribute, $value, $overwrite=false) {
 		if( ! $this->isValidAttribute($attribute)) {
 			throw new ClaraDomainException(sprintf('Invalid HTML element attribute "%s"', $attribute));
 		}
-		if( ! $this->hasAttribute($attribute)) {
+		if($overwrite || ! $this->hasAttribute($attribute)) {
 			return $this->addAttribute($attribute, $value);
 		}
 		$this->attributes[$attribute]->append($value);
@@ -186,11 +186,12 @@ abstract class Element implements Stringable {
 	/**
 	 * Shortcut method for a commonly used attribute
 	 *
-	 * @param $value
+	 * @param      $value
+	 * @param bool $overwrite
 	 * @return $this
 	 */
-	public function style($value) {
-		return $this->addAttribute('style', $value);
+	public function style($value, $overwrite=false) {
+		return $this->appendAttribute('style', $value, $overwrite);
 	}
 
 	/**
@@ -198,11 +199,12 @@ abstract class Element implements Stringable {
 	 *
 	 * NOTE: Spelling is because "class" is a reserved word
 	 *
-	 * @param $value
+	 * @param      $value
+	 * @param bool $overwrite
 	 * @return $this
 	 */
-	public function clazz($value) {
-		return $this->addAttribute('class', $value);
+	public function clazz($value, $overwrite=false) {
+		return $this->appendAttribute('class', $value, $overwrite);
 	}
 
 	/**
