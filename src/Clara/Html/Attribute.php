@@ -47,7 +47,7 @@ class Attribute implements Stringable {
 	 * @return Attribute
 	 */
 	public function append($value) {
-		$this->value .= $value;
+		$this->value .= ' ' . $value;
 		return $this;
 	}
 
