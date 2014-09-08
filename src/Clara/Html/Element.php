@@ -91,6 +91,19 @@ abstract class Element implements Stringable {
 	}
 
 	/**
+	 * Adds an array of attribute=>value pairs to the element
+	 *
+	 * @param array $attributes
+	 * @return $this
+	 */
+	public function addAttributes($attributes) {
+		foreach($attributes as $attribute => $value) {
+			$this->addAttribute($attribute, $value);
+		}
+		return $this;
+	}
+
+	/**
 	 * Appends a value to the given attribute
 	 *
 	 * @param string $attribute
@@ -106,6 +119,20 @@ abstract class Element implements Stringable {
 			return $this->addAttribute($attribute, $value);
 		}
 		$this->attributes[$attribute]->append($value);
+		return $this;
+	}
+
+	/**
+	 * Appends an array of attribute=>value pairs to the element
+	 *
+	 * @param array $attributes
+	 * @param bool  $overwrite
+	 * @return $this
+	 */
+	public function appendAttributes($attributes, $overwrite=false) {
+		foreach($attributes as $attribute => $value) {
+			$this->appendAttribute($attribute, $value, $overwrite);
+		}
 		return $this;
 	}
 
