@@ -151,8 +151,8 @@ abstract class Element implements Stringable {
 	 * @throws \Clara\Html\Exception\HtmlLogicException
 	 */
 	public function addContent($content) {
-		if( ! is_string($content) && ! $content instanceof Element) {
-			throw new ClaraDomainException('Element inner content must be either a string or \Clara\Html\Element');
+		if( ! $content) {
+			$content = '';
 		}
 		$this->content[] = $content;
 		return $this;
